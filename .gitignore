@@ -1,0 +1,278 @@
+# ==========================================
+#           GITIGNORE - PROJECTE TRIE
+# ==========================================
+# Fitxer per ignorar arxius temporals, compilats i innecessaris
+# Creat: $(date +%Y-%m-%d)
+
+# ==========================================
+#              FITXERS COMPILATS C++
+# ==========================================
+
+# Fitxers objecte
+*.o
+*.obj
+
+# Executables
+*.exe
+*.out
+*.app
+trie_demo*
+test_trie*
+*_test
+
+# Fitxers de debug
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Libraries estàtiques i dinàmiques
+*.so
+*.dylib
+*.dll
+*.a
+*.lib
+
+# ==========================================
+#               DIRECTORIS BUILD
+# ==========================================
+
+# Directori bin amb executables
+/bin/
+build/
+Build/
+BUILD/
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile.cmake
+
+# ==========================================
+#              FITXERS LATEX
+# ==========================================
+
+# Fitxers auxiliars LaTeX
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.brf
+*.fls
+*.fdb_latexmk
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.idx
+*.ind
+*.ilg
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+*.run.xml
+
+# Bibtex
+*.bib.bak
+*.bib.sav
+
+# Fitxers de backup LaTeX
+*.backup
+*.bak
+*.sav
+
+# ==========================================
+#          EDITORS I IDEs
+# ==========================================
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# CLion / IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+# Vim
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+
+# ==========================================
+#          SISTEMES OPERATIUS
+# ==========================================
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# ==========================================
+#              DOCUMENTACIÓ
+# ==========================================
+
+# Documentació HTML generada (Doxygen)
+docs/html/
+docs/man/
+
+# Fitxers temporals de documentació
+*.docx#
+*.doc#
+*.pptx#
+*.ppt#
+
+# ==========================================
+#              FITXERS TEMPORALS
+# ==========================================
+
+# Fitxers temporals generals
+*.tmp
+*.temp
+*.cache
+*.pid
+*.seed
+*.coverage
+.nyc_output
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ==========================================
+#              ARXIUS DE CONFIGURACIÓ
+# ==========================================
+
+# Configuració local (si escau)
+.env
+.env.local
+.env.*.local
+config.local.*
+
+# ==========================================
+#              ARXIUS DE TEST
+# ==========================================
+
+# Resultats de tests
+test-results/
+coverage/
+*.lcov
+
+# ==========================================
+#              PACKAGES I DEPENDENCIES
+# ==========================================
+
+# Node.js (si s'utilitza per alguna eina)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python (si s'utilitza per scripts)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# ==========================================
+#              ARXIUS COMPRESOS
+# ==========================================
+
+# Arxius ZIP, RAR, etc (usualment no volem fer track)
+*.zip
+*.rar
+*.7z
+*.tar
+*.tar.gz
+*.tgz
+*.tar.bz2
+
+# ==========================================
+#              ALTRES
+# ==========================================
+
+# Fitxers de backup
+*.orig
+*.rej
+
+# Patches
+*.patch
+*.diff
+
+# Tags
+tags
+TAGS
+
+# Ctags
+.tags
+.tags_sorted_by_file
+
+# ==========================================
+#         EXCEPCIONS (FITXERS A MANTENIR)
+# ==========================================
+
+# Assegurem que aquests fitxers SÍ es mantinguin:
+!README.md
+!Makefile
+!docs/README.md
+!docs/pdf/*.pdf
+!.gitignore
+
+# ==========================================
+#                  FI GITIGNORE
+# ==========================================
