@@ -1,16 +1,16 @@
 #include "../include/trie.h"
 #include <algorithm>
 
-Trie::Trie() : root(std::make_unique<TrieNode>()) {}
+Trie::Trie() : root(make_unique<TrieNode>()) {}
 
-void Trie::insert(const std::string& word) {
+void Trie::insert(const string& word) {
     if (word.empty()) return;
     
     TrieNode* current = root.get();
     
     for (char c : word) {
         if (current->children.find(c) == current->children.end()) {
-            current->children[c] = std::make_unique<TrieNode>();
+            current->children[c] = make_unique<TrieNode>();
         }
         current = current->children[c].get();
     }
@@ -18,7 +18,7 @@ void Trie::insert(const std::string& word) {
     current->is_end_of_word = true;
 }
 
-bool Trie::search(const std::string& word) const {
+bool Trie::search(const string& word) const {
     if (word.empty()) return false;
     
     TrieNode* current = root.get();
@@ -34,7 +34,7 @@ bool Trie::search(const std::string& word) const {
     return current->is_end_of_word;
 }
 
-bool Trie::starts_with(const std::string& prefix) const {
+bool Trie::starts_with(const string& prefix) const {
     if (prefix.empty()) return true;
     
     TrieNode* current = root.get();
@@ -50,7 +50,8 @@ bool Trie::starts_with(const std::string& prefix) const {
     return true;
 }
 
-bool Trie::remove(const std::string& word) {
+// no hace falta
+bool Trie::remove(const string& word) {
     if (word.empty() || !search(word)) {
         return false;
     }
@@ -59,7 +60,7 @@ bool Trie::remove(const std::string& word) {
     return true;
 }
 
-bool Trie::remove_helper(TrieNode* node, const std::string& word, size_t index) {
+bool Trie::remove_helper(TrieNode* node, const string& word, size_t index) {
     if (index == word.length()) {
         // Hem arribat al final de la paraula
         node->is_end_of_word = false;
@@ -87,8 +88,8 @@ bool Trie::remove_helper(TrieNode* node, const std::string& word, size_t index) 
     return !node->is_end_of_word && node->children.empty();
 }
 
-std::vector<std::string> Trie::get_words_with_prefix(const std::string& prefix) const {
-    std::vector<std::string> results;
+vector<string> Trie::get_words_with_prefix(const string& prefix) const {
+    vector<string> results;
     
     if (!starts_with(prefix)) {
         return results;
@@ -107,7 +108,7 @@ std::vector<std::string> Trie::get_words_with_prefix(const std::string& prefix) 
     return results;
 }
 
-void Trie::collect_words_with_prefix(TrieNode* node, const std::string& prefix, std::vector<std::string>& results) const {
+void Trie::collect_words_with_prefix(TrieNode* node, const string& prefix, vector<string>& results) const {
     if (node->is_end_of_word) {
         results.push_back(prefix);
     }
@@ -117,7 +118,7 @@ void Trie::collect_words_with_prefix(TrieNode* node, const std::string& prefix, 
     }
 }
 
-std::vector<std::string> Trie::get_all_words() const {
+vector<string> Trie::get_all_words() const {
     return get_words_with_prefix("");
 }
 
@@ -126,5 +127,5 @@ bool Trie::empty() const {
 }
 
 void Trie::clear() {
-    root = std::make_unique<TrieNode>();
+    root = make_unique<TrieNode>();
 }
