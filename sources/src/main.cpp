@@ -17,10 +17,13 @@ int main() {
     Trie trie;
     
     // Inserir paraules
-    vector<string> words_to_insert = {
+    vector<string> words_to_insert; /* = {
         "gat", "gats", "gatet", "casa", "cases", "casat", 
         "cotxe", "cotxes", "col", "color", "colors"
     };
+ */
+    string x;
+    while(cin >> x) words_to_insert.push_back(x);
     
     cout << "Inserint paraules al Trie...\n";
     for (const auto& word : words_to_insert) {
@@ -34,7 +37,10 @@ int main() {
     
     // Cercar paraules
     cout << "Cercant paraules:\n";
-    vector<string> words_to_search = {"gat", "gato", "casa", "cases", "cotxe"};
+    vector<string> words_to_search; /* = {"gat", "gato", "casa", "cases", "cotxe"}; */
+    while(cin >> x){
+        words_to_search.push_back(x);
+    }
     for (const auto& word : words_to_search) {
         bool found = trie.search(word);
         cout << "  '" << word << "': " << (found ? "TROBADA" : "NO TROBADA") << "\n";
@@ -66,7 +72,7 @@ int main() {
     cout << "\n";
     
     // Eliminar paraules
-    cout << "Eliminant la paraula 'gats'...\n";
+    /* cout << "Eliminant la paraula 'gats'...\n";
     bool removed = trie.remove("gats");
     cout << "  Eliminació " << (removed ? "EXITOSA" : "FALLIDA") << "\n\n";
     
@@ -75,7 +81,7 @@ int main() {
     // Verificar que la paraula ja no existeix
     cout << "Cercant 'gats' després d'eliminar-la: " << (trie.search("gats") ? "TROBADA" : "NO TROBADA") << "\n";
     cout << "Però 'gat' encara existeix: " << (trie.search("gat") ? "TROBADA" : "NO TROBADA") << "\n\n";
-    
+     */
     // Comprovar si el Trie està buit
     cout << "El Trie està buit? " << (trie.empty() ? "SÍ" : "NO") << "\n";
     

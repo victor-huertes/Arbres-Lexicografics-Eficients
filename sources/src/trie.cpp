@@ -15,7 +15,7 @@ void Trie::insert(const string& word) {
         current = current->children[c].get();
     }
     
-    current->is_end_of_word = true;
+    current->index = 1; // cambiar despues por la heuristica para decidir como indexar
 }
 
 bool Trie::search(const string& word) const {
@@ -31,7 +31,7 @@ bool Trie::search(const string& word) const {
         current = it->second.get();
     }
     
-    return current->is_end_of_word;
+    return current->index;
 }
 
 bool Trie::starts_with(const string& prefix) const {
@@ -51,7 +51,7 @@ bool Trie::starts_with(const string& prefix) const {
 }
 
 // no hace falta
-bool Trie::remove(const string& word) {
+/* bool Trie::remove(const string& word) {
     if (word.empty() || !search(word)) {
         return false;
     }
@@ -86,7 +86,7 @@ bool Trie::remove_helper(TrieNode* node, const string& word, size_t index) {
     // 1. No marca el final d'una paraula
     // 2. No té fills
     return !node->is_end_of_word && node->children.empty();
-}
+} */
 
 vector<string> Trie::get_words_with_prefix(const string& prefix) const {
     vector<string> results;
@@ -109,7 +109,7 @@ vector<string> Trie::get_words_with_prefix(const string& prefix) const {
 }
 
 void Trie::collect_words_with_prefix(TrieNode* node, const string& prefix, vector<string>& results) const {
-    if (node->is_end_of_word) {
+    if (node->index != -1) {
         results.push_back(prefix);
     }
     

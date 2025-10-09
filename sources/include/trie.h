@@ -20,10 +20,11 @@ private:
      * @brief Node intern del Trie
      */
     struct TrieNode {
+        //mapa que guarda los posibles hijos del trie 
         unordered_map<char, unique_ptr<TrieNode>> children;
-        bool is_end_of_word;
+        int index;
         
-        TrieNode() : is_end_of_word(false) {}
+        TrieNode() : index(-1){}
     };
     
     unique_ptr<TrieNode> root;
