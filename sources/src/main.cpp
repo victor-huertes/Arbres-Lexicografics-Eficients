@@ -88,6 +88,9 @@ int main() {
     
     demostration_naive();
     //NO HACE FALTA IMPLEMENTAR PARA CADENAS NO ESTRUCTURADAS, SI JUSTIFICAMOS LO SUFICIENTEMENTE BIEN EN LA MEMORIA
+    // esta bien lo de cambiar un alfabeto a otro -> {0,1} para hacerlo todo en binario. 
+    //posibilidad de buscar por palabras que estén mal escritas y indexar frases enteras. 
+    //entender tema typos y todo eso, no cal implementarlo, pero si explicarlo en la memoria.
     
     return 0;
 }

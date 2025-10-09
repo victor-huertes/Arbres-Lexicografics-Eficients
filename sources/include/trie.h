@@ -14,6 +14,9 @@ using namespace std;
  * un conjunt dinàmic de strings. Ofereix operacions eficients d'inserció,
  * cerca i eliminació de paraules.
  */
+
+
+
 class Trie {
 private:
     /**
@@ -21,10 +24,11 @@ private:
      */
     struct TrieNode {
         //mapa que guarda los posibles hijos del trie 
-        unordered_map<char, unique_ptr<TrieNode>> children;
-        int index;
+        //unordered_map<char, unique_ptr<TrieNode>> children;
+        vector<TrieNode*> children;
+        vector<int> index;
         
-        TrieNode() : index(-1){}
+        //TrieNode() : index(-1){}
     };
     
     unique_ptr<TrieNode> root;

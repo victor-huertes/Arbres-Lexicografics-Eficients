@@ -4,23 +4,54 @@
 Trie::Trie() : root(make_unique<TrieNode>()) {}
 
 void Trie::insert(const string& word) {
+
     if (word.empty()) return;
+
+    TrieNode* current = root.get();
+
+    for (char c : word) {
+        int idx = c - '0';
+        if (idx < 0 || idx >= current->children.size()) {
+            // Resize vector if needed
+            current->children.resize(idx + 1, nullptr);
+        }
+        if (!current->children[idx]) {
+            current->children[idx] = new TrieNode();
+        }
+        current = current->children[idx];
+    }
+
+    current->index.push_back(1); // cambiar despues por la heuristica para decidir como indexar
+    /* if (word.empty()) return;
     
     TrieNode* current = root.get();
     
     for (char c : word) {
-        if (current->children.find(c) == current->children.end()) {
-            current->children[c] = make_unique<TrieNode>();
+        if (current->children[c-'0'] == current->children.end()) {
+            current->children[c-'0'] = make_unique<TrieNode>();
         }
-        current = current->children[c].get();
+        current = current->children[c-'0'].get();
     }
     
-    current->index = 1; // cambiar despues por la heuristica para decidir como indexar
+    current->index.push_back(1); */ // cambiar despues por la heuristica para decidir como indexar
     //para indexacion, si es un conjunto de datos no estructurados, se puede hacer indexando cada sufijo existente en el texto. 
 }
 
 bool Trie::search(const string& word) const {
     if (word.empty()) return false;
+
+    TrieNode* current = root.get();
+
+    for (char c : word) {
+        int idx = c - '0';
+        if (idx < 0 || idx >= current->children.size() || !current->children[idx]) {
+            return false;
+        }
+        current = current->children[idx];
+    }
+
+    return !current->index.empty();
+    /* if (word.empty()) return false;
     
     TrieNode* current = root.get();
     
@@ -32,7 +63,7 @@ bool Trie::search(const string& word) const {
         current = it->second.get();
     }
     
-    return current->index;
+    return current->index; */
 }
 
 bool Trie::starts_with(const string& prefix) const {
@@ -41,11 +72,10 @@ bool Trie::starts_with(const string& prefix) const {
     TrieNode* current = root.get();
     
     for (char c : prefix) {
-        auto it = current->children.find(c);
-        if (it == current->children.end()) {
-            return false;
-        }
-        current = it->second.get();
+        int idx = c - '0';
+        if(idx > current->children.size() || idx < 0 || !current->children[idx]) return false;
+        
+        current = current->children[idx];
     }
     
     return true;
@@ -90,6 +120,7 @@ bool Trie::remove_helper(TrieNode* node, const string& word, size_t index) {
 } */
 
 vector<string> Trie::get_words_with_prefix(const string& prefix) const {
+
     vector<string> results;
     
     if (!starts_with(prefix)) {
@@ -100,7 +131,7 @@ vector<string> Trie::get_words_with_prefix(const string& prefix) const {
     
     // Navegar fins al final del prefix
     for (char c : prefix) {
-        current = current->children[c].get();
+        current = current->children[c-'0'];
     }
     
     // Recollir totes les paraules que comencin amb aquest prefix
@@ -110,12 +141,15 @@ vector<string> Trie::get_words_with_prefix(const string& prefix) const {
 }
 
 void Trie::collect_words_with_prefix(TrieNode* node, const string& prefix, vector<string>& results) const {
-    if (node->index != -1) {
+    if (!node->index.empty()) {
         results.push_back(prefix);
     }
     
-    for (const auto& pair : node->children) {
-        collect_words_with_prefix(pair.second.get(), prefix + pair.first, results);
+    for (size_t i = 0; i < node->children.size(); ++i) {
+        if (node->children[i]) {
+            char next_char = static_cast<char>(i + '0');
+            collect_words_with_prefix(node->children[i], prefix + next_char, results);
+        }
     }
 }
 
