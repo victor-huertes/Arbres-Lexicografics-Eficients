@@ -16,6 +16,7 @@ void Trie::insert(const string& word) {
     }
     
     current->index = 1; // cambiar despues por la heuristica para decidir como indexar
+    //para indexacion, si es un conjunto de datos no estructurados, se puede hacer indexando cada sufijo existente en el texto. 
 }
 
 bool Trie::search(const string& word) const {

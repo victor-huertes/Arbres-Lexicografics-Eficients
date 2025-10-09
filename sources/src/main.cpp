@@ -11,11 +11,12 @@ void print_vector(const vector<string>& words, const string& title) {
     cout << "\n";
 }
 
-int main() {
+void demostration_naive(){
     cout << "=== Demostració del Trie ===" << endl;
     
     Trie trie;
     
+    cout << "inserta las palabras que quieres introducir al trie" << endl;
     // Inserir paraules
     vector<string> words_to_insert; /* = {
         "gat", "gats", "gatet", "casa", "cases", "casat", 
@@ -71,17 +72,7 @@ int main() {
     }
     cout << "\n";
     
-    // Eliminar paraules
-    /* cout << "Eliminant la paraula 'gats'...\n";
-    bool removed = trie.remove("gats");
-    cout << "  Eliminació " << (removed ? "EXITOSA" : "FALLIDA") << "\n\n";
     
-    print_vector(trie.get_all_words(), "Paraules després d'eliminar 'gats'");
-    
-    // Verificar que la paraula ja no existeix
-    cout << "Cercant 'gats' després d'eliminar-la: " << (trie.search("gats") ? "TROBADA" : "NO TROBADA") << "\n";
-    cout << "Però 'gat' encara existeix: " << (trie.search("gat") ? "TROBADA" : "NO TROBADA") << "\n\n";
-     */
     // Comprovar si el Trie està buit
     cout << "El Trie està buit? " << (trie.empty() ? "SÍ" : "NO") << "\n";
     
@@ -91,6 +82,12 @@ int main() {
     cout << "El Trie està buit després de netejar? " << (trie.empty() ? "SÍ" : "NO") << "\n";
     
     cout << "\n=== Fi de la demostració ===" << endl;
+}
+
+int main() {
+    
+    demostration_naive();
+    //NO HACE FALTA IMPLEMENTAR PARA CADENAS NO ESTRUCTURADAS, SI JUSTIFICAMOS LO SUFICIENTEMENTE BIEN EN LA MEMORIA
     
     return 0;
 }
