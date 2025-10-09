@@ -22,6 +22,7 @@ void Trie::insert(const string& word) {
     }
 
     current->index.push_back(1); // cambiar despues por la heuristica para decidir como indexar
+    current->end_of_word = true;
     /* if (word.empty()) return;
     
     TrieNode* current = root.get();

@@ -27,6 +27,7 @@ private:
         //unordered_map<char, unique_ptr<TrieNode>> children;
         vector<TrieNode*> children;
         vector<int> index;
+        bool end_of_word;
         
         //TrieNode() : index(-1){}
     };

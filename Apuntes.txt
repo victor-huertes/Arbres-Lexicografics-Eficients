@@ -1,0 +1,2 @@
+Abra:
+- (no se si hace falta) he añadido un bool al trie.h para saber si el nodo es final de una palabra
