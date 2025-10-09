@@ -1,6 +1,7 @@
 #include "../include/trie.h"
 #include <iostream>
 #include <vector>
+#include <sstream>
 using namespace std;
 
 void print_vector(const vector<string>& words, const string& title) {
@@ -84,13 +85,72 @@ void demostration_naive(){
     cout << "\n=== Fi de la demostració ===" << endl;
 }
 
+void demo_naive2(){
+    cout << "=== Interfície interactiva del Trie ===" << endl;
+    Trie trie;
+    string comando, entrada;
+
+    cout << "Opcions disponibles:\n";
+    cout << "  i - Introduir paraules (separades per espais)\n";
+    cout << "  b - Buscar una paraula\n";
+    cout << "  p - Buscar si existeix un prefix\n";
+    cout << "  t - Mostrar totes les paraules amb un prefix\n";
+    cout << "  q - Sortir\n";
+
+    while (true) {
+        cout << "\nIntrodueix una opció (i/b/p/t/q): ";
+        cin >> comando;
+        if (comando == "q") {
+            cout << "Sortint de la demostració...\n";
+            break;
+        }
+        if (comando == "i") {
+            cout << "Introdueix les paraules a inserir (separades per espais): ";
+            cin.ignore();
+            getline(cin, entrada);
+            istringstream iss(entrada);
+            string paraula;
+            while (iss >> paraula) {
+                trie.insert(paraula);
+                cout << "  Inserida: " << paraula << "\n";
+            }
+        } else if (comando == "b") {
+            cout << "Introdueix la paraula a buscar: ";
+            cin >> entrada;
+            bool trobat = trie.search(entrada);
+            cout << "  '" << entrada << "': " << (trobat ? "TROBADA" : "NO TROBADA") << "\n";
+        } else if (comando == "p") {
+            cout << "Introdueix el prefix a buscar: ";
+            cin >> entrada;
+            bool existeix = trie.starts_with(entrada);
+            cout << "  Prefix '" << entrada << "': " << (existeix ? "EXISTEIX" : "NO EXISTEIX") << "\n";
+        } else if (comando == "t") {
+            cout << "Introdueix el prefix per mostrar paraules: ";
+            cin >> entrada;
+            auto paraules = trie.get_words_with_prefix(entrada);
+            if (paraules.empty()) {
+                cout << "  No hi ha paraules amb el prefix '" << entrada << "'.\n";
+            } else {
+                cout << "  Paraules amb el prefix '" << entrada << "':\n";
+                for (const auto& p : paraules) {
+                    cout << "    - " << p << "\n";
+                }
+            }
+        } else {
+            cout << "Opció no reconeguda. Torna-ho a intentar.\n";
+        }
+    }
+    cout << "=== Fi de la demostració interactiva ===" << endl;
+}
+
 int main() {
     
-    demostration_naive();
+    //demostration_naive();
+    demo_naive2();
     //NO HACE FALTA IMPLEMENTAR PARA CADENAS NO ESTRUCTURADAS, SI JUSTIFICAMOS LO SUFICIENTEMENTE BIEN EN LA MEMORIA
     // esta bien lo de cambiar un alfabeto a otro -> {0,1} para hacerlo todo en binario. 
     //posibilidad de buscar por palabras que estén mal escritas y indexar frases enteras. 
     //entender tema typos y todo eso, no cal implementarlo, pero si explicarlo en la memoria.
-    
+
     return 0;
 }
