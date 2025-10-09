@@ -18,16 +18,16 @@ TEST_TARGET = $(BIN_DIR)/test_trie
 TEST_DEBUG_TARGET = $(BIN_DIR)/test_trie_debug
 TEST_ADVANCED_TARGET = $(BIN_DIR)/test_trie_advanced
 TEST_ADVANCED_DEBUG_TARGET = $(BIN_DIR)/test_trie_advanced_debug
-SOURCES = $(SRC_DIR)/trie.cpp $(SRC_DIR)/main.cpp
-TEST_SOURCES = $(SRC_DIR)/trie.cpp $(TEST_DIR)/test_trie.cpp
-TEST_ADVANCED_SOURCES = $(SRC_DIR)/trie.cpp $(TEST_DIR)/test_trie_advanced.cpp
-OBJECTS = $(BIN_DIR)/trie.o $(BIN_DIR)/main.o
-TEST_OBJECTS = $(BIN_DIR)/trie_test.o $(BIN_DIR)/test_trie.o
-TEST_ADVANCED_OBJECTS = $(BIN_DIR)/trie_test_adv.o $(BIN_DIR)/test_trie_advanced.o
-DEBUG_OBJECTS = $(BIN_DIR)/trie_debug.o $(BIN_DIR)/main_debug.o
-TEST_DEBUG_OBJECTS = $(BIN_DIR)/trie_test_debug.o $(BIN_DIR)/test_trie_debug.o
-TEST_ADVANCED_DEBUG_OBJECTS = $(BIN_DIR)/trie_test_adv_debug.o $(BIN_DIR)/test_trie_advanced_debug.o
-HEADERS = $(INCLUDE_DIR)/trie.h
+SOURCES = $(SRC_DIR)/naive.cpp $(SRC_DIR)/patricia.cpp $(SRC_DIR)/radix.cpp $(SRC_DIR)/main.cpp
+TEST_SOURCES = $(SRC_DIR)/naive.cpp $(TEST_DIR)/test_trie.cpp
+TEST_ADVANCED_SOURCES = $(SRC_DIR)/naive.cpp $(TEST_DIR)/test_trie_advanced.cpp
+OBJECTS = $(BIN_DIR)/naive.o $(BIN_DIR)/patricia.o $(BIN_DIR)/radix.o $(BIN_DIR)/main.o
+TEST_OBJECTS = $(BIN_DIR)/naive_test.o $(BIN_DIR)/test_trie.o
+TEST_ADVANCED_OBJECTS = $(BIN_DIR)/naive_test_adv.o $(BIN_DIR)/test_trie_advanced.o
+DEBUG_OBJECTS = $(BIN_DIR)/naive_debug.o $(BIN_DIR)/patricia_debug.o $(BIN_DIR)/radix_debug.o $(BIN_DIR)/main_debug.o
+TEST_DEBUG_OBJECTS = $(BIN_DIR)/naive_test_debug.o $(BIN_DIR)/test_trie_debug.o
+TEST_ADVANCED_DEBUG_OBJECTS = $(BIN_DIR)/naive_test_adv_debug.o $(BIN_DIR)/test_trie_advanced_debug.o
+HEADERS = $(INCLUDE_DIR)/naive.h $(INCLUDE_DIR)/patricia.h $(INCLUDE_DIR)/radix.h $(INCLUDE_DIR)/trie.h
 
 # Colors per als missatges
 RED = \033[0;31m
@@ -93,9 +93,14 @@ $(BIN_DIR)/trie_test.o: $(SRC_DIR)/trie.cpp $(HEADERS) | $(BIN_DIR)
 	@echo "$(YELLOW)Compilant trie.cpp per tests...$(NC)"
 	$(CXX) $(CXXFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
 
-$(BIN_DIR)/test_trie.o: $(TEST_DIR)/test_trie.cpp $(HEADERS) | $(BIN_DIR)
 	@echo "$(YELLOW)Compilant test_trie.cpp...$(NC)"
 	$(CXX) $(CXXFLAGS) -I$(INCLUDE_DIR) -I$(TEST_DIR) -c $< -o $@
+
+$(BIN_DIR)/naive_test.o: $(SRC_DIR)/naive.cpp $(HEADERS) | $(BIN_DIR)
+	@echo "$(YELLOW)Compilant naive.cpp per tests...$(NC)"
+	$(CXX) $(CXXFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
+
+$(BIN_DIR)/test_trie.o: $(TEST_DIR)/test_trie.cpp $(HEADERS) | $(BIN_DIR)
 
 # Executar tests
 .PHONY: run-tests
@@ -112,8 +117,8 @@ $(TEST_DEBUG_TARGET): $(TEST_DEBUG_OBJECTS) | $(BIN_DIR)
 	@echo "$(BLUE)Enllaçant $(TEST_DEBUG_TARGET)...$(NC)"
 	$(CXX) $(DEBUG_FLAGS) -o $@ $^
 
-$(BIN_DIR)/trie_test_debug.o: $(SRC_DIR)/trie.cpp $(HEADERS) | $(BIN_DIR)
-	@echo "$(YELLOW)Compilant trie.cpp per tests (debug)...$(NC)"
+$(BIN_DIR)/naive_test_debug.o: $(SRC_DIR)/naive.cpp $(HEADERS) | $(BIN_DIR)
+	@echo "$(YELLOW)Compilant naive.cpp per tests (debug)...$(NC)"
 	$(CXX) $(DEBUG_FLAGS) -I$(INCLUDE_DIR) -c $< -o $@
 
 $(BIN_DIR)/test_trie_debug.o: $(TEST_DIR)/test_trie.cpp $(HEADERS) | $(BIN_DIR)
@@ -135,8 +140,8 @@ $(TEST_ADVANCED_TARGET): $(TEST_ADVANCED_OBJECTS) | $(BIN_DIR)
 	@echo "$(BLUE)Enllaçant $(TEST_ADVANCED_TARGET)...$(NC)"
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
-$(BIN_DIR)/trie_test_adv.o: $(SRC_DIR)/trie.cpp $(HEADERS) | $(BIN_DIR)
-	@echo "$(YELLOW)Compilant trie.cpp per tests avançats...$(NC)"
+$(BIN_DIR)/naive_test_adv.o: $(SRC_DIR)/naive.cpp $(HEADERS) | $(BIN_DIR)
+	@echo "$(YELLOW)Compilant naive.cpp per tests avançats...$(NC)"
 	$(CXX) $(CXXFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
 
 $(BIN_DIR)/test_trie_advanced.o: $(TEST_DIR)/test_trie_advanced.cpp $(HEADERS) | $(BIN_DIR)
