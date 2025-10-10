@@ -14,10 +14,14 @@ Cada node en una trie està associat a un caràcter de l'alfabet, menys el node 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{figures/trie_example.png}
-    \caption{Exemple d'un trie que conté les paraules "at", "ate", "bad", "bed", "beard" i "beat.}
+    \caption{Exemple d'un trie que conté les paraules "at", "ate", "bad", "bed", "beard" i "beat".}
     \label{fig:trie_example}
 \end{figure}
+Tot i que, en general, les tries són estructures eficients per operacions de cerca de paraules o prefixos, aquesta eficiencia normalment significa una penalització en l'ús de memòria. A una implementació bàsica d'un trie, cada node existent tindrà una quantitat de fills igual a la quantitat de caràcters existents en l'alfabet amb el que estem treballant. Això vol dir que en el nostre cas, per exemple, cada node té 128 nodes fills. Notem que a la Figura 1, per simplificació, omitim els fills conformats per nodes buits. 
+Per tant, la complexitat espacial d'un trie d'aquest tipus serà de l'ordre de $ O(NM) $, on $N$ representa el nombre de paraules i $M$ la mida màxima d'una paraula. 
+ 
 **explicar los dos tst i radix, con ventajas y desventajas**
+
 
 \section{Disseny i Implementació}
 

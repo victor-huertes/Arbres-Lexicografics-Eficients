@@ -1,2 +1,3 @@
 Abra:
 - (no se si hace falta) he añadido un bool al trie.h para saber si el nodo es final de una palabra
+- no hace falta bro se sabe si tiene index pero aqui cada uno con lo suyo
