@@ -20,7 +20,11 @@ Cada node en una trie està associat a un caràcter de l'alfabet, menys el node 
 Tot i que, en general, les tries són estructures eficients per operacions de cerca de paraules o prefixos, aquesta eficiencia normalment significa una penalització en l'ús de memòria. A una implementació bàsica d'un trie, cada node existent tindrà una quantitat de fills igual a la quantitat de caràcters existents en l'alfabet amb el que estem treballant. Això vol dir que en el nostre cas, per exemple, cada node té 128 nodes fills. Notem que a la Figura 1, per simplificació, omitim els fills conformats per nodes buits. 
 Per tant, la complexitat espacial d'un trie d'aquest tipus serà de l'ordre de $ O(NM) $, on $N$ representa el nombre de paraules i $M$ la mida màxima d'una paraula. 
  
-**explicar los dos tst i radix, con ventajas y desventajas**
+L'eficiència en termes de memòria ha estat el motor pel desenvolupament de diverses variants de les tries tradicionals. En aquest treball discutirem dues de les principals alternatives: els Ternary Search Trees (TST) i els Radix Trees. 
+\subsection{Ternary Search Trees}
+Un Ternary Search Tree (o arbre ternari de cerca) és un tipus de trie que busca aprofitar els avantatges espacials dels Binary Search Trees, reduint el numero de fills possibles per un node qualsevol. 
+El seu funcionament és simple: cada node tindrà 3 possibles fills. El fill esquerre (\textit{left child}), el fill dret (\textit{right child}) i el fill central (\textit{middle child}). El valor del fill esquerre haurà de ser un valor menor al del node pare, el del fill dret haura de ser major, y el fill central serà un punter al valor del següent símbol de la string a qui pertany el node central.
+Notem que el rendiment d'aquesta estructura depen directament de la profunditat de l'arbre.  
 
 
 \section{Disseny i Implementació}
