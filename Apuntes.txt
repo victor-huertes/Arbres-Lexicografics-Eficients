@@ -1,3 +1,17 @@
 Abra:
 - (no se si hace falta) he añadido un bool al trie.h para saber si el nodo es final de una palabra
 - no hace falta bro se sabe si tiene index pero aqui cada uno con lo suyo
+
+COSAS A HACER
+
+- Parte preliminar de la memoria
+- Indexacion correcta de palabras por línea o posición
+- Explicar por que hemos escogido el radix
+- Casos de prueba sobre las inputs. 
+    - IDEA: poner las inputs predefinidas pasadas como un fichero que se puede abrir desde el codigo
+            y, en todo caso, escoger como hacer las pruebas
+    - seleccionar de cada input un caso de prueba para poder analizar la eficiencia de cada tree
+- MÉTRICAS: tiempo, espacio. Solo cuenta tiempo de búsqueda o sea que esto es solo mirar el tiempo desde que 
+            empieza a buscar hasta que acaba. En la memoria analizar las diferencias entre estos tiempos
+            dependiendo de la palabra que se haya buscado, si es muy larga, si es más corta, en que punto del árbol está
+            (sobretodo en el radix, pq depende del punto en el que acabe o si comparte muchos prefijos será más larga o más corta)
