@@ -25,10 +25,13 @@ L'eficiència en termes de memòria ha estat el motor pel desenvolupament de div
 Un Ternary Search Tree (o arbre ternari de cerca) és un tipus de trie que busca aprofitar els avantatges espacials dels Binary Search Trees, reduint el numero de fills possibles per un node qualsevol. 
 El seu funcionament és simple: cada node tindrà 3 possibles fills. El fill esquerre (\textit{left child}), el fill dret (\textit{right child}) i el fill central (\textit{middle child}). El valor del fill esquerre haurà de ser un valor menor al del node pare, el del fill dret haura de ser major, y el fill central serà un punter al valor del següent símbol de la string a qui pertany el node central.
 Notem que el rendiment d'aquesta estructura depen directament de la profunditat de l'arbre.  
+
+
+
 \subsection{Radix Tries}
 Un Radix Tree és una altra variant de trie bàsic que busca estalviar espai en la memòria. L'idea principal d'aquesta estructura és comprimir els nodes que tenen un sol fill per així aconseguir reduir la profunditat de l'arbre i, per tant, el nombre de nodes necessaris per representar un conjunt de paraules.
 El seu funcionament consisteix en que cada aresta de l'arbre pot representar una cadena de caràcters en lloc d'un sol caràcter. Això significa que els nodes es poden fusionar entre si per només haver de tenir un que representa la cadena completa. Per exemple, representant el mateix conjunt de paraules {"at", "ate", "bad", "bed", "beard", "beat"} amb un Radix Tree, tindríem la següent estructura:
-//ME GUSTARIA PONER EJEMPLO DE RADIX TREE CON EL TRIE EXAMPLE
+//ME GUSTARIA PONER EJEMPLO DE RADIX TREE CON EL TRIE EXAMPLE ok mi siela haz la figura no
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{figures/radix_example.png}
