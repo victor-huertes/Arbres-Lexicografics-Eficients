@@ -21,27 +21,28 @@ Tot i que, en general, les tries són estructures eficients per operacions de ce
 Per tant, la complexitat espacial d'un trie d'aquest tipus serà de l'ordre de $ O(NM) $, on $N$ representa el nombre de paraules i $M$ la mida màxima d'una paraula. 
  
 L'eficiència en termes de memòria ha estat el motor pel desenvolupament de diverses variants de les tries tradicionals. En aquest treball discutirem dues de les principals alternatives: els Ternary Search Trees (TST) i els Radix Trees. 
-\subsection{Ternary Search Tries}
-Un Ternary Search Trie (o arbre ternari de cerca) és un tipus de trie que busca aprofitar els avantatges espacials dels Binary Search Trees, reduint el numero de fills possibles per un node qualsevol. 
+\subsection{Ternary Search Trees}
+Un Ternary Search Tree (o arbre ternari de cerca) és un tipus de tree que busca aprofitar els avantatges espacials dels Binary Search Trees, reduint el numero de fills possibles per un node qualsevol. 
 El seu funcionament és simple: cada node tindrà 3 possibles fills. El fill esquerre (\textit{left child}), el fill dret (\textit{right child}) i el fill central (\textit{middle child}). El valor del fill esquerre haurà de ser un valor menor al del node pare, el del fill dret haura de ser major, y el fill central serà un punter al valor del següent símbol de la string a qui pertany el node central.
 Notem que el rendiment d'aquesta estructura depen directament de la profunditat de l'arbre.  
 
 
 
-\subsection{Radix Tries}
-Un Radix Tree és una altra variant de trie bàsic que busca estalviar espai en la memòria. L'idea principal d'aquesta estructura és comprimir els nodes que tenen un sol fill per així aconseguir reduir la profunditat de l'arbre i, per tant, el nombre de nodes necessaris per representar un conjunt de paraules.
+\subsection{Radix Trees}
+Un Radix Tree és una altra variant de tree bàsic que busca estalviar espai en la memòria. L'idea principal d'aquesta estructura és comprimir els nodes que tenen un sol fill per així aconseguir reduir la profunditat de l'arbre i, per tant, el nombre de nodes necessaris per representar un conjunt de paraules.
 El seu funcionament consisteix en que cada aresta de l'arbre pot representar una cadena de caràcters en lloc d'un sol caràcter. Això significa que els nodes es poden fusionar entre si per només haver de tenir un que representa la cadena completa. Per exemple, representant el mateix conjunt de paraules {"at", "ate", "bad", "bed", "beard", "beat"} amb un Radix Tree, tindríem la següent estructura:
-//ME GUSTARIA PONER EJEMPLO DE RADIX TREE CON EL TRIE EXAMPLE ok mi siela haz la figura no. ok estaria bien hacerlas todas con el mismo formato no
+//ME GUSTARIA PONER EJEMPLO DE RADIX TREE CON EL TRee EXAMPLE ok mi siela haz la figura no. ok estaria bien hacerlas todas con el mismo formato no
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{figures/radix_example.png}
-    \caption{Exemple d'un Radix trie que conté les paraules "at", "ate", "bad", "bed", "beard" i "beat".}
-    \label{fig:trie_example}
+    \caption{Exemple d'un Radix tree que conté les paraules "at", "ate", "bad", "bed", "beard" i "beat".}
+    \label{fig:radix_example}
 \end{figure}
-Com veurem més endavant, aquesta estructura millora significativament l'ús de memòria en comparació amb un trie naive i ternari en la majoria de casos (incloent en molt dels textos d'exemples proporcionats), però en cas pitjor tindrà un rendiment similar. (ARBOLES DENSOS)
+Com veurem més endavant, aquesta estructura millora significativament l'ús de memòria en comparació amb un tree naive i ternari en la majoria de casos (incloent en molt dels textos d'exemples proporcionats), però en cas pitjor tindrà un rendiment similar. (ARBOLES DENSOS)
 
-\subsection{Patricia Tries}
-Un Patricia Trie (Practical Algorithm To Retrieve Information Coded In Alphanumeric) és una variant comprimida de Radix Tree on el nodes element es poden fusionar amb els seus pares, mantenint només aquells necessaris per diferenciar entre les diferents paraules del conjunt. 
+\subsection{Patricia Trees}
+Un Patricia Tree (Practical Algorithm To Retrieve Information Coded In Alphanumeric) és una variant comprimida de Radix Tree on el nodes element es poden fusionar amb els seus pares, mantenint només aquells necessaris per diferenciar entre les paraules del conjunt.
+Aquesta reducció es fará a través de la codificació binària del text.  
 
 
 \section{Disseny i Implementació}
