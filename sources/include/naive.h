@@ -15,9 +15,6 @@ using namespace std;
  * d'arbre que permet emmagatzemar un conjunt dinàmic de strings. Ofereix operacions 
  * eficients d'inserció, cerca i eliminació de paraules.
  */
-
-
-
 class NaiveTrie : public Trie {
 private:
     /**
@@ -29,20 +26,10 @@ private:
         vector<TrieNode*> children;
         vector<int> index;
         bool end_of_word;
-        
         //TrieNode() : index(-1){}
     };
     
     unique_ptr<TrieNode> root;
-    
-    /**
-     * @brief Funció auxiliar per eliminar paraules recursivament
-     * @param node Node actual
-     * @param word Paraula a eliminar
-     * @param index Índex actual de la paraula
-     * @return true si el node pot ser eliminat
-     */
-    bool remove_helper(TrieNode* node, const string& word, size_t index);
     
     /**
      * @brief Funció auxiliar per recollir totes les paraules amb un prefix
@@ -122,13 +109,6 @@ public:
     void insert(const string& word) override;
     bool search(const string& word) const override;
     bool starts_with(const string& prefix) const override;
-    
-    /**
-     * @brief Elimina una paraula del NaiveTrie
-     * @param word Paraula a eliminar
-     * @return true si la paraula es va eliminar correctament, false si no existia
-     */
-    bool remove(const string& word);
     
     /**
      * @brief Retorna totes les paraules que comencin amb el prefix donat

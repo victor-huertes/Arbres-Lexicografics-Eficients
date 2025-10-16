@@ -213,44 +213,6 @@ bool NaiveTrie::starts_with(const string& prefix) const {
     return true;
 }
 
-// no hace falta
-/* bool NaiveTrie::remove(const string& word) {
-    if (word.empty() || !search(word)) {
-        return false;
-    }
-    
-    remove_helper(root.get(), word, 0);
-    return true;
-}
-
-bool Trie::remove_helper(TrieNode* node, const string& word, size_t index) {
-    if (index == word.length()) {
-        // Hem arribat al final de la paraula
-        node->is_end_of_word = false;
-        
-        // Si el node no té fills, pot ser eliminat
-        return node->children.empty();
-    }
-    
-    char c = word[index];
-    auto it = node->children.find(c);
-    
-    if (it == node->children.end()) {
-        return false;
-    }
-    
-    bool should_delete_child = remove_helper(it->second.get(), word, index + 1);
-    
-    if (should_delete_child) {
-        node->children.erase(it);
-    }
-    
-    // El node actual pot ser eliminat si:
-    // 1. No marca el final d'una paraula
-    // 2. No té fills
-    return !node->is_end_of_word && node->children.empty();
-} */
-
 vector<string> NaiveTrie::get_words_with_prefix(const string& prefix) const {
 
     vector<string> results;
