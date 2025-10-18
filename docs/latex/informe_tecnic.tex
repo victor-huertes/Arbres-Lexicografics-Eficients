@@ -28,7 +28,6 @@ Notem que el rendiment d'aquesta estructura depen directament de la profunditat 
 
 En general, l'ús d'un TST sol ser el mateix que el d'un Trie estandard, però obtindrem el pitjor rendiment a un TST treballant amb cadenes ordenades, ja que la millor manera que tindrem de garantir un bon rendiment sera tenint un arbre balancejat. 
 
-
 \subsection{Radix Tries}
 Un Radix Tree és una altra variant de trie bàsic que busca estalviar espai en la memòria. L'idea principal d'aquesta estructura és comprimir els nodes que tenen un sol fill per així aconseguir reduir la profunditat de l'arbre i, per tant, el nombre de nodes necessaris per representar un conjunt de paraules.
 El seu funcionament consisteix en que cada aresta de l'arbre pot representar una cadena de caràcters en lloc d'un sol caràcter. Això significa que els nodes es poden fusionar entre si per només haver de tenir un que representa la cadena completa. Per exemple, representant el mateix conjunt de paraules {"at", "ate", "bad", "bed", "beard", "beat"} amb un Radix Tree, tindríem la següent estructura:
@@ -43,12 +42,14 @@ Com veurem més endavant, aquesta estructura millora significativament l'ús de 
 \subsection{Patricia Trees}
 Un Patricia Tree (Practical Algorithm To Retrieve Information Coded In Alphanumeric) és una variant comprimida de Radix Tree on el nodes element es poden fusionar amb els seus pares, mantenint només aquells necessaris per diferenciar entre les paraules del conjunt.
 El Patricia té la característica de que en comptes de guardar i comparar cadenes de caràcters, ho fa a nivell de bits.
-//no entiendo el patricia usando la documentacion que nos dan
-//si alguien lo entiende y quiere acabarlo o si no podemos dejarlo asi
+
+En aquest treball només ho tindrem en compte a nivell teòric, ja que considerem que les altres estructures anteriorment descrites seran més senzilles d'implementar i manipular amb l'objectiu de fer una comparació amb els millors fonaments possibles. 
+%¿?¿ me lo he inventao un pelo a ver que opinan
 
 \section{Disseny i Implementació}
-\begin{comment} aquest apartat cal descriure amb detall les decisions de disseny i les implementacions realitzades. Cal explicar quines estructures s’han utilitzat, com s’han representat internament i quines operacions s’han implementat (com ara inserció, cerca, autocompletat, etc.), tot destacant com s’ha garantit l’eficiència de cadascuna. També és convenient discutir les possibles alternatives que s’han considerat durant el desenvolupament, així com justificar les opcions escollides. Finalment, s’hauria d’incloure una comparació qualitativa entre les diferents implementacions desenvolupades, tot valorant-ne avantatges, limitacions i aplicabilitat en funció de l’escenari o conjunt de dades. \end{comment}
+%\begin{comment} En aquest apartat cal descriure amb detall les decisions de disseny i les implementacions realitzades. Cal explicar quines estructures s’han utilitzat, com s’han representat internament i quines operacions s’han implementat (com ara inserció, cerca, autocompletat, etc.), tot destacant com s’ha garantit l’eficiència de cadascuna. També és convenient discutir les possibles alternatives que s’han considerat durant el desenvolupament, així com justificar les opcions escollides. Finalment, s’hauria d’incloure una comparació qualitativa entre les diferents implementacions desenvolupades, tot valorant-ne avantatges, limitacions i aplicabilitat en funció de l’escenari o conjunt de dades. \end{comment}
 Pel nostre projecte, hem decidit dissenyar i implementar tres tipus diferents d'estructures de dades basades en tries: un trie bàsic, un Ternary Search Tree (TST) i un Radix Tree. En aquest apartat es detallen les nostres decisions per l'implementació de cadascuna d'aquestes estructures.
+
 \subsection{Trie Naive}
 L'implementació del trie bàsic ha sigut relativament senzilla. Hem creat una classe \texttt{NaiveTrie} i un struct \texttt{TrieNode} que conté un node arrel i diverses funcions per a la inserció, cerca i autocompletat de paraules. 
 Cada node del trie està representat per una estructura que conté un vector \textit{children} de punters als seus fills (de mida 128 per cobrir l'alfabet ASCII), un vector \textit{index} que indica totes les posicions on ha aparegut la paraula al text (útil per cert usos) i un indicador \textit{end of word} per saber si el node marca el final de paraula.
