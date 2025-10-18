@@ -26,8 +26,11 @@ Un Ternary Search Tree (o arbre ternari de cerca) és un tipus de tree que busca
 El seu funcionament és simple: cada node tindrà 3 possibles fills. El fill esquerre (\textit{left child}), el fill dret (\textit{right child}) i el fill central (\textit{middle child}). El valor del fill esquerre haurà de ser un valor menor al del node pare, el del fill dret haura de ser major, y el fill central serà un punter al valor del següent símbol de la string a qui pertany el node central.
 Notem que el rendiment d'aquesta estructura depen directament de la profunditat de l'arbre.  
 
-\subsection{Radix Trees}
-Un Radix Tree és una altra variant de tree bàsic que busca estalviar espai en la memòria. L'idea principal d'aquesta estructura és comprimir els nodes que tenen un sol fill per així aconseguir reduir la profunditat de l'arbre i, per tant, el nombre de nodes necessaris per representar un conjunt de paraules.
+En general, l'ús d'un TST sol ser el mateix que el d'un Trie estandard, però obtindrem el pitjor rendiment a un TST treballant amb cadenes ordenades, ja que la millor manera que tindrem de garantir un bon rendiment sera tenint un arbre balancejat. 
+
+
+\subsection{Radix Tries}
+Un Radix Tree és una altra variant de trie bàsic que busca estalviar espai en la memòria. L'idea principal d'aquesta estructura és comprimir els nodes que tenen un sol fill per així aconseguir reduir la profunditat de l'arbre i, per tant, el nombre de nodes necessaris per representar un conjunt de paraules.
 El seu funcionament consisteix en que cada aresta de l'arbre pot representar una cadena de caràcters en lloc d'un sol caràcter. Això significa que els nodes es poden fusionar entre si per només haver de tenir un que representa la cadena completa. Per exemple, representant el mateix conjunt de paraules {"at", "ate", "bad", "bed", "beard", "beat"} amb un Radix Tree, tindríem la següent estructura:
 \begin{figure}[H]
     \centering
@@ -44,11 +47,12 @@ El Patricia té la característica de que en comptes de guardar i comparar caden
 //si alguien lo entiende y quiere acabarlo o si no podemos dejarlo asi
 
 \section{Disseny i Implementació}
-//En aquest apartat cal descriure amb detall les decisions de disseny i les implementacions realitzades. Cal explicar quines estructures s’han utilitzat, com s’han representat internament i quines operacions s’han implementat (com ara inserció, cerca, autocompletat, etc.), tot destacant com s’ha garantit l’eficiència de cadascuna. També és convenient discutir les possibles alternatives que s’han considerat durant el desenvolupament, així com justificar les opcions escollides. Finalment, s’hauria d’incloure una comparació qualitativa entre les diferents implementacions desenvolupades, tot valorant-ne avantatges, limitacions i aplicabilitat en funció de l’escenari o conjunt de dades.
+\begin{comment} aquest apartat cal descriure amb detall les decisions de disseny i les implementacions realitzades. Cal explicar quines estructures s’han utilitzat, com s’han representat internament i quines operacions s’han implementat (com ara inserció, cerca, autocompletat, etc.), tot destacant com s’ha garantit l’eficiència de cadascuna. També és convenient discutir les possibles alternatives que s’han considerat durant el desenvolupament, així com justificar les opcions escollides. Finalment, s’hauria d’incloure una comparació qualitativa entre les diferents implementacions desenvolupades, tot valorant-ne avantatges, limitacions i aplicabilitat en funció de l’escenari o conjunt de dades. \end{comment}
 Pel nostre projecte, hem decidit dissenyar i implementar tres tipus diferents d'estructures de dades basades en tries: un trie bàsic, un Ternary Search Tree (TST) i un Radix Tree. En aquest apartat es detallen les nostres decisions per l'implementació de cadascuna d'aquestes estructures.
 \subsection{Trie Naive}
 L'implementació del trie bàsic ha sigut relativament senzilla. Hem creat una classe \texttt{NaiveTrie} i un struct \texttt{TrieNode} que conté un node arrel i diverses funcions per a la inserció, cerca i autocompletat de paraules. 
-Cada node del trie està representat per una estructura que conté un vector \textit{children} de punters als seus fills (de mida 128 per cobrir l'alfabet ASCII), un vector \textit{index} que indica totes les posicions on ha aparegut la paraula al text (útil per cert usos) i un indicador \textit{end_of_word} per saber si el node marca el final de paraula.
+Cada node del trie està representat per una estructura que conté un vector \textit{children} de punters als seus fills (de mida 128 per cobrir l'alfabet ASCII), un vector \textit{index} que indica totes les posicions on ha aparegut la paraula al text (útil per cert usos) i un indicador \textit{end of word} per saber si el node marca el final de paraula.
+
 També hem implementat la capacitat de buscar prefixos, utilitzant una funció que retorna totes les paraules en el subtree del node actual. Aquesta funció també ens serveix per l'autocompletat, el qual hem implementat només tenint en compte els prefixos i retornant les cinc primeres paraules que trobi.
 Aquestes implementacions no tenen com a objetiu ser les més correctes, sinó fer una implementació naive que permeti comparar l'eficiencia temporal i espacial amb els trees més sofiscats que veurem més endavant. Tot i això, hem fet que la inserció i la búsqueda tinguin cost lineal \textit{O(n)} respecte el tamany \textit{n} de la paraula a buscar/inserir.
 
