@@ -58,7 +58,11 @@ public:
     /**
      * @brief Constructor del NaiveTrie
      */
-    NaiveTrie();
+    NaiveTrie(){
+        root = make_unique<TrieNode>();
+        root->children = vector<TrieNode*>(128, nullptr);
+        root->end_of_word = false;
+    };
     
     /**
      * @brief Destructor del NaiveTrie

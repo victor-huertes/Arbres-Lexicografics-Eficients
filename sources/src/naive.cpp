@@ -1,5 +1,6 @@
 #include "../include/naive.h"
 #include <algorithm>
+#include <iostream>
 
 NaiveTrie::NaiveTrie() : root(make_unique<TrieNode>()) {}
 
@@ -18,11 +19,7 @@ void NaiveTrie::insert(const string& word, int position) {
 
     TrieNode* current = root.get();
 
-    for (char c : word) {
-        int idx = c - '0';
-        if (idx < 0 || idx >= (int)current->children.size()) {
-            current->children.resize(idx + 1, nullptr);
-        }
+    for (unsigned char idx : word) {
         if (!current->children[idx]) {
             current->children[idx] = new TrieNode();
         }
@@ -40,9 +37,8 @@ vector<int> NaiveTrie::search_positions(const string& word) const {
 
     TrieNode* current = root.get();
 
-    for (char c : word) {
-        int idx = c - '0';
-        if (idx < 0 || idx >= (int)current->children.size() || !current->children[idx]) {
+    for (unsigned char idx : word) {
+        if (!current->children[idx]) {
             return positions;
         }
         current = current->children[idx];
@@ -61,9 +57,8 @@ vector<int> NaiveTrie::starts_with_positions(const string& prefix) const {
     
     TrieNode* current = root.get();
     
-    for (char c : prefix) {
-        int idx = c - '0';
-        if(idx >= (int)current->children.size() || idx < 0 || !current->children[idx]) {
+    for (unsigned char idx : prefix) {
+        if(!current->children[idx]) {
             return positions;
         }
         current = current->children[idx];
@@ -96,9 +91,8 @@ vector<pair<string, int>> NaiveTrie::autocomplete(const string& prefix) const {
     TrieNode* current = root.get();
     
     // Navegar hasta el final del prefix
-    for (char c : prefix) {
-        int idx = c - '0';
-        if (idx >= (int)current->children.size() || idx < 0 || !current->children[idx]) {
+    for (unsigned char idx : prefix) {
+        if (!current->children[idx]) {
             return results;
         }
         current = current->children[idx];
@@ -122,7 +116,7 @@ void NaiveTrie::collect_words_with_positions(TrieNode* node, const string& prefi
     
     for (size_t i = 0; i < node->children.size(); ++i) {
         if (node->children[i]) {
-            char next_char = static_cast<char>(i + '0');
+            char next_char = static_cast<char>(i); // Ya no sumamos '0'
             collect_words_with_positions(node->children[i], prefix + next_char, results);
         }
     }
@@ -133,7 +127,7 @@ vector<pair<string, int>> NaiveTrie::get_words() const {
     return autocomplete("");
 }
 
-// Método legacy: insertar sin posición
+/* Método legacy: insertar sin posición
 void NaiveTrie::insert(const string& word) {
 
     if (word.empty()) return;
@@ -141,11 +135,8 @@ void NaiveTrie::insert(const string& word) {
     TrieNode* current = root.get();
 
     for (char c : word) {
-        int idx = c - '0';
-        if (idx < 0 || idx >= (int)current->children.size()) {
-            // Resize vector if needed
-            current->children.resize(idx + 1, nullptr);
-        }
+        int idx = static_cast<unsigned char>(c);
+        if (idx >= 128) continue; // ignorar caracteres fuera del ASCII estándar
         if (!current->children[idx]) {
             current->children[idx] = new TrieNode();
         }
@@ -154,7 +145,7 @@ void NaiveTrie::insert(const string& word) {
 
     current->index.push_back(1); // cambiar despues por la heuristica para decidir como indexar
     current->end_of_word = true;
-    /* if (word.empty()) return;
+    if (word.empty()) return;
     
     TrieNode* current = root.get();
     
@@ -165,18 +156,18 @@ void NaiveTrie::insert(const string& word) {
         current = current->children[c-'0'].get();
     }
     
-    current->index.push_back(1); */ // cambiar despues por la heuristica para decidir como indexar
+    current->index.push_back(1);  // cambiar despues por la heuristica para decidir como indexar
     //para indexacion, si es un conjunto de datos no estructurados, se puede hacer indexando cada sufijo existente en el texto. 
 }
+*/
 
 bool NaiveTrie::search(const string& word) const {
     if (word.empty()) return false;
 
     TrieNode* current = root.get();
 
-    for (char c : word) {
-        int idx = c - '0';
-        if (idx < 0 || idx >= (int)current->children.size() || !current->children[idx]) {
+    for (unsigned char idx : word) {
+        if (!current->children[idx]) {
             return false;
         }
         current = current->children[idx];
@@ -203,10 +194,8 @@ bool NaiveTrie::starts_with(const string& prefix) const {
     
     TrieNode* current = root.get();
     
-    for (char c : prefix) {
-        int idx = c - '0';
-        if(idx > (int)current->children.size() || idx < 0 || !current->children[idx]) return false;
-        
+    for (unsigned char idx : prefix) {
+        if(!current->children[idx]) return false;
         current = current->children[idx];
     }
     
@@ -214,7 +203,6 @@ bool NaiveTrie::starts_with(const string& prefix) const {
 }
 
 vector<string> NaiveTrie::get_words_with_prefix(const string& prefix) const {
-
     vector<string> results;
     
     if (!starts_with(prefix)) {
@@ -224,8 +212,9 @@ vector<string> NaiveTrie::get_words_with_prefix(const string& prefix) const {
     TrieNode* current = root.get();
     
     // Navegar fins al final del prefix
-    for (char c : prefix) {
-        current = current->children[c-'0'];
+    for (unsigned char idx : prefix) {
+        current = current->children[idx];
+        if (!current) return results;
     }
     
     // Recollir totes les paraules que comencin amb aquest prefix
@@ -241,7 +230,7 @@ void NaiveTrie::collect_words_with_prefix(TrieNode* node, const string& prefix, 
     
     for (size_t i = 0; i < node->children.size(); ++i) {
         if (node->children[i]) {
-            char next_char = static_cast<char>(i + '0');
+            char next_char = static_cast<char>(i); // Ya no sumamos '0'
             collect_words_with_prefix(node->children[i], prefix + next_char, results);
         }
     }
@@ -257,4 +246,6 @@ bool NaiveTrie::empty() const {
 
 void NaiveTrie::clear() {
     root = make_unique<TrieNode>();
+    root->children = vector<TrieNode*>(128, nullptr);
+    root->end_of_word = false;
 }
