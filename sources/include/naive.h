@@ -21,12 +21,10 @@ private:
      * @brief Node intern del Trie
      */
     struct TrieNode {
-        //mapa que guarda los posibles hijos del trie 
-        //unordered_map<char, unique_ptr<TrieNode>> children;
         vector<TrieNode*> children;
         vector<int> index;
         bool end_of_word;
-        //TrieNode() : index(-1){}
+        TrieNode() : children(128, nullptr), index(), end_of_word(false) {}
     };
     
     unique_ptr<TrieNode> root;
@@ -58,11 +56,7 @@ public:
     /**
      * @brief Constructor del NaiveTrie
      */
-    NaiveTrie(){
-        root = make_unique<TrieNode>();
-        root->children = vector<TrieNode*>(128, nullptr);
-        root->end_of_word = false;
-    };
+    NaiveTrie();
     
     /**
      * @brief Destructor del NaiveTrie

@@ -127,39 +127,21 @@ vector<pair<string, int>> NaiveTrie::get_words() const {
     return autocomplete("");
 }
 
-/* Método legacy: insertar sin posición
 void NaiveTrie::insert(const string& word) {
-
     if (word.empty()) return;
 
     TrieNode* current = root.get();
 
-    for (char c : word) {
-        int idx = static_cast<unsigned char>(c);
-        if (idx >= 128) continue; // ignorar caracteres fuera del ASCII estándar
+    for (unsigned char idx : word) {
         if (!current->children[idx]) {
             current->children[idx] = new TrieNode();
         }
         current = current->children[idx];
     }
 
-    current->index.push_back(1); // cambiar despues por la heuristica para decidir como indexar
+    current->index.push_back(1); // Por defecto, posición 1 para inserciones directas
     current->end_of_word = true;
-    if (word.empty()) return;
-    
-    TrieNode* current = root.get();
-    
-    for (char c : word) {
-        if (current->children[c-'0'] == current->children.end()) {
-            current->children[c-'0'] = make_unique<TrieNode>();
-        }
-        current = current->children[c-'0'].get();
-    }
-    
-    current->index.push_back(1);  // cambiar despues por la heuristica para decidir como indexar
-    //para indexacion, si es un conjunto de datos no estructurados, se puede hacer indexando cada sufijo existente en el texto. 
 }
-*/
 
 bool NaiveTrie::search(const string& word) const {
     if (word.empty()) return false;
