@@ -53,7 +53,7 @@ public:
     vector<pair<string, int>> get_words() const;
 
     // Funcions de compatibilitat (si són necessàries a 'main.cpp')
-    void insert(const string& word) { insert(word, -1); } // Posició fictícia
+    void insert(const string& word) { insert(word, 0); } // Posició 0 per defecte
     bool search_bool(const string& word) const { return !search_positions(word).empty(); }
     bool starts_with_bool(const string& prefix) const { return !starts_with(prefix).empty(); }
 
