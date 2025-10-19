@@ -26,7 +26,7 @@ test:
 	@g++ -std=c++17 -Wall -O2 -o bin/experiments bin/naive.o bin/radix.o bin/experiments.o
 	@./bin/experiments
 
-pdf:
+pdf: 
 	@cd docs/latex && pdflatex -interaction=nonstopmode main.tex > /dev/null 2>&1
 	@cd docs/latex && pdflatex -interaction=nonstopmode main.tex > /dev/null 2>&1
 	@echo "PDF generado en docs/latex/main.pdf"
