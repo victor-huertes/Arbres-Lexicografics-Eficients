@@ -12,10 +12,10 @@ L'estructura de dades trie (també coneguda com a arbre de prefixos) és un arbr
 Cada node en una trie està associat a un caràcter de l'alfabet, menys el node arrel que és un node buit, i el nombre màxim de fills que pot tenir un determinat node és igual al nombre de caràcters existents en l'alfabet. Pel propòsit d'aquest treball, es farà servir el diccionari ASCII com a referència, de manera que tots els fills quedaran ordenats alfabeticament seguint aquest estandard. El final d'una paraula quedarà representat per un valor associat al node, on s'indicarà l'index d'aquesta paraula dintre del conjunt del text que es faci servir com a dataset. És important recalcar que, per tal que una paraula aparegui al diccionari constituit per un trie, no cal que sigui un node fulla, ja que es pot fer una indexació de qualsevol node intermig que formi part d'una altra paraula més llarga. 
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{figures/trie_example.png}
-    \caption{Exemple d'un trie que conté les paraules "at", "ate", "bad", "bed", "beard" i "beat".}
-    \label{fig:trie_example}
+	\centering
+	\includegraphics[width=0.6\textwidth]{figures/trie_example.png}
+	\caption{Exemple d'un trie que conté les paraules ``at'', ``ate'', ``bad'', ``bed'', ``beard'' i ``beat''.}
+	\label{fig:trie_example}
 \end{figure}
 Tot i que, en general, les tries són estructures eficients per operacions de cerca de paraules o prefixos, aquesta eficiencia normalment significa una penalització en l'ús de memòria. A una implementació bàsica d'un trie, cada node existent tindrà una quantitat de fills igual a la quantitat de caràcters existents en l'alfabet amb el que estem treballant. Això vol dir que en el nostre cas, per exemple, cada node té 128 nodes fills. Notem que a la Figura 1, per simplificació, omitim els fills conformats per nodes buits. 
 Per tant, la complexitat espacial d'un trie d'aquest tipus serà de l'ordre de $ O(NM) $, on $N$ representa el nombre de paraules i $M$ la mida màxima d'una paraula. 
@@ -30,12 +30,12 @@ En general, l'ús d'un TST sol ser el mateix que el d'un Trie estandard, però o
 
 \subsection{Radix Tries}
 Un Radix Tree és una altra variant de trie bàsic que busca estalviar espai en la memòria. L'idea principal d'aquesta estructura és comprimir els nodes que tenen un sol fill per així aconseguir reduir la profunditat de l'arbre i, per tant, el nombre de nodes necessaris per representar un conjunt de paraules.
-El seu funcionament consisteix en que cada aresta de l'arbre pot representar una cadena de caràcters en lloc d'un sol caràcter. Això significa que els nodes es poden fusionar entre si per només haver de tenir un que representa la cadena completa. Per exemple, representant el mateix conjunt de paraules {"at", "ate", "bad", "bed", "beard", "beat"} amb un Radix Tree, tindríem la següent estructura:
+El seu funcionament consisteix en que cada aresta de l'arbre pot representar una cadena de caràcters en lloc d'un sol caràcter. Això significa que els nodes es poden fusionar entre si per només haver de tenir un que representa la cadena completa. Per exemple, representant el mateix conjunt de paraules \{``at'', ``ate'', ``bad'', ``bed'', ``beard'', ``beat''\} amb un Radix Tree, tindríem la següent estructura:
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{figures/radix_example.png}
-    \caption{Exemple d'un Radix tree que conté les paraules "at", "ate", "bad", "bed", "beard" i "beat".}
-    \label{fig:radix_example}
+	\centering
+	\includegraphics[width=0.6\textwidth]{figures/radix_example.png}
+	\caption{Exemple d'un Radix tree que conté les paraules "at", "ate", "bad", "bed", "beard" i "beat".}
+	\label{fig:radix_example}
 \end{figure}
 Com veurem més endavant, aquesta estructura millora significativament l'ús de memòria en comparació amb un tree naive i ternari en la majoria de casos (incloent en molt dels textos d'exemples proporcionats), però en cas pitjor tindrà un rendiment similar. (ARBOLES DENSOS)
 
