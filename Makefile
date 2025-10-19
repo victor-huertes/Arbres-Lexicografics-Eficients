@@ -181,9 +181,9 @@ clean:
 
 # Netejar completament (inclou documentació generada)
 .PHONY: distclean
-distclean: clean
+distclean: clean clean-latex
 	@echo "$(RED)Neteja completa...$(NC)"
-	@rm -rf docs/html docs/latex/*.aux docs/latex/*.log docs/latex/*.fls docs/latex/*.fdb_latexmk docs/latex/*.synctex.gz
+	@rm -rf docs/html
 	@echo "$(GREEN)✓ Neteja completa finalitzada!$(NC)"
 
 # Generar documentació amb Doxygen (opcional)
@@ -196,6 +196,68 @@ docs:
 		echo "$(YELLOW)⚠ Doxygen no està instal·lat$(NC)"; \
 	fi
 
+# Compilar documentació LaTeX
+.PHONY: pdf
+pdf:
+	@echo "$(BLUE)Compilant documentació LaTeX...$(NC)"
+	@if command -v pdflatex >/dev/null 2>&1; then \
+		cd docs/latex && \
+		pdflatex -interaction=nonstopmode main.tex > /tmp/latex_output.log 2>&1; \
+		pdflatex -interaction=nonstopmode main.tex > /tmp/latex_output.log 2>&1; \
+		if [ -f main.pdf ]; then \
+			echo "$(GREEN)✓ PDF generat: docs/latex/main.pdf$(NC)"; \
+			if grep -q "^!" /tmp/latex_output.log; then \
+				echo "$(YELLOW)⚠ Hi ha errors en el document LaTeX (veure /tmp/latex_output.log)$(NC)"; \
+			fi; \
+		else \
+			echo "$(RED)✗ Error al generar el PDF$(NC)"; \
+			tail -n 20 /tmp/latex_output.log; \
+			exit 1; \
+		fi; \
+	else \
+		echo "$(RED)✗ pdflatex no està instal·lat$(NC)"; \
+		echo "$(YELLOW)Instal·la-ho amb: sudo apt-get install texlive-latex-base texlive-latex-extra$(NC)"; \
+		exit 1; \
+	fi
+
+# Compilar amb bibtex (si hi ha bibliografia)
+.PHONY: pdf-full
+pdf-full:
+	@echo "$(BLUE)Compilant documentació LaTeX amb referències...$(NC)"
+	@if command -v pdflatex >/dev/null 2>&1; then \
+		cd docs/latex && \
+		pdflatex -interaction=nonstopmode main.tex > /tmp/latex_output.log 2>&1; \
+		if [ -f main.aux ] && grep -q '\\bibdata' main.aux; then \
+			echo "$(YELLOW)Processant bibliografia...$(NC)"; \
+			bibtex main >> /tmp/latex_output.log 2>&1 || true; \
+		fi; \
+		pdflatex -interaction=nonstopmode main.tex > /tmp/latex_output.log 2>&1; \
+		pdflatex -interaction=nonstopmode main.tex > /tmp/latex_output.log 2>&1; \
+		if [ -f main.pdf ]; then \
+			echo "$(GREEN)✓ PDF generat: docs/latex/main.pdf$(NC)"; \
+			if grep -q "^!" /tmp/latex_output.log; then \
+				echo "$(YELLOW)⚠ Hi ha errors en el document LaTeX (veure /tmp/latex_output.log)$(NC)"; \
+			fi; \
+		else \
+			echo "$(RED)✗ Error al generar el PDF$(NC)"; \
+			tail -n 20 /tmp/latex_output.log; \
+			exit 1; \
+		fi; \
+	else \
+		echo "$(RED)✗ pdflatex no està instal·lat$(NC)"; \
+		echo "$(YELLOW)Instal·la-ho amb: sudo apt-get install texlive-latex-base texlive-latex-extra$(NC)"; \
+		exit 1; \
+	fi
+
+# Netejar fitxers temporals de LaTeX
+.PHONY: clean-latex
+clean-latex:
+	@echo "$(RED)Netejant fitxers temporals de LaTeX...$(NC)"
+	@rm -f docs/latex/*.aux docs/latex/*.log docs/latex/*.out docs/latex/*.toc \
+		docs/latex/*.fls docs/latex/*.fdb_latexmk docs/latex/*.synctex.gz \
+		docs/latex/*.bbl docs/latex/*.blg docs/latex/*.nav docs/latex/*.snm
+	@echo "$(GREEN)✓ Fitxers temporals de LaTeX netejats!$(NC)"
+
 # Instal·lar dependències (només informatiu)
 .PHONY: install-deps
 install-deps:
@@ -204,6 +266,7 @@ install-deps:
 	@echo "  - make"
 	@echo "  - valgrind (opcional, per debug)"
 	@echo "  - doxygen (opcional, per documentació)"
+	@echo "  - pdflatex (opcional, per generar PDFs LaTeX)"
 
 # Mostrar ajuda
 .PHONY: help
@@ -225,8 +288,11 @@ help:
 	@echo "  $(BLUE)valgrind$(NC)       - Executa amb Valgrind per detectar memory leaks"
 	@echo "  $(BLUE)valgrind-tests$(NC) - Executa tests amb Valgrind"
 	@echo "  $(BLUE)clean$(NC)          - Neteja fitxers objecte i executables"
+	@echo "  $(BLUE)clean-latex$(NC)    - Neteja fitxers temporals de LaTeX"
 	@echo "  $(BLUE)distclean$(NC)      - Neteja completa (inclou documentació)"
 	@echo "  $(BLUE)docs$(NC)           - Genera documentació amb Doxygen"
+	@echo "  $(BLUE)pdf$(NC)            - Compila la documentació LaTeX a PDF"
+	@echo "  $(BLUE)pdf-full$(NC)       - Compila LaTeX amb referències i bibliografia"
 	@echo "  $(BLUE)install-deps$(NC)   - Mostra les dependències necessàries"
 	@echo "  $(BLUE)help$(NC)           - Mostra aquesta ajuda"
 	@echo ""
@@ -239,4 +305,4 @@ help:
 	@echo "  make clean           # Neteja"
 
 # Evitar conflictes amb fitxers del mateix nom
-.PHONY: all debug run run-debug clean distclean docs install-deps help valgrind test run-tests test-debug run-tests-debug valgrind-tests test-advanced run-tests-advanced run-all-tests
+.PHONY: all debug run run-debug clean clean-latex distclean docs pdf pdf-full install-deps help valgrind test run-tests test-debug run-tests-debug valgrind-tests test-advanced run-tests-advanced run-all-tests
