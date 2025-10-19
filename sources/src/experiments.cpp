@@ -4,7 +4,10 @@
 #include <string>
 #include <chrono>
 #include <iomanip>
-#ifdef _WIN32
+#include <algorithm>
+#include <cctype>
+
+#ifdef _WIN32 // no se quien lo va a ejecutar al final
     #include <windows.h>
     #include <psapi.h>
 #else
@@ -16,34 +19,53 @@
 #include "../include/naive.h"
 #include "../include/radixDone.h"
 
+using namespace std;
+
 // ===========================================
 // FUNCIONES AUXILIARES
 // ===========================================
 
 // Carga palabras desde un archivo (una por línea)
-std::vector<std::string> loadDataset(const std::string& filename) {
-    std::ifstream file(filename);
-    std::vector<std::string> words;
-    std::string word;
-    while (file >> word)
-        words.push_back(word);
+vector<string> loadDataset(const string& filename) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cout << "Error: No se pudo abrir el archivo " << filename << endl;
+        exit(0);
+    }
+    vector<string> words;
+    string word;
+    while (file >> word) {
+        //preprocess: delete special characters, lowercase letters
+        word.erase(remove_if(word.begin(), word.end(), 
+            [](char c) { return !isalnum(c); }), word.end());
+        transform(word.begin(), word.end(), word.begin(), ::tolower);
+        
+        if(!word.empty()) words.push_back(word);
+    }
+         
     return words;
 }
 // Mide el uso máximo de memoria (en KB)
 long getMemoryUsageKB() {
-    PROCESS_MEMORY_COUNTERS pmc;
-    GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
-    return pmc.WorkingSetSize / 1024; // Convertir bytes a KB
+    #ifdef _WIN32
+        _PROCESS_MEMORY_COUNTERS pmc;
+        GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
+        return pmc.WorkingSetSize / 1024; // Convertir bytes a KB
+    #else
+        struct rusage usage;
+        getrusage(RUSAGE_SELF, &usage);
+        return usage.ru_maxrss;
+    #endif
 }
 
 
 // Plantilla para medir tiempo de ejecución de una función arbitraria
 template <typename Func>
 double measureTime(Func f) {
-    auto start = std::chrono::high_resolution_clock::now();
+    auto start = chrono::high_resolution_clock::now();
     f();
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = end - start;
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> elapsed = end - start;
     return elapsed.count() * 1000; // milisegundos
 }
 
@@ -53,14 +75,14 @@ double measureTime(Func f) {
 
 template <typename Structure>
 void runExperiment(
-    const std::string& name,
+    const string& name,
     Structure& structure,
-    const std::vector<std::string>& insertWords,
-    const std::vector<std::string>& searchWords
+    const vector<string>& insertWords,
+    const vector<string>& searchWords
 ) {
-    std::cout << "\n=====================================\n";
-    std::cout << " Experimento: " << name << "\n";
-    std::cout << "=====================================\n";
+    cout << "\n=====================================\n";
+    cout << " Experimento: " << name << "\n";
+    cout << "=====================================\n";
 
     // --- Inserción ---
     long memBefore = getMemoryUsageKB();
@@ -74,7 +96,7 @@ void runExperiment(
     size_t found = 0;
     double searchTime = measureTime([&]() {
         for (const auto& w : searchWords)
-            if (structure.search(w)) found++;
+            if (structure.search_positions(w).size() != 0) found++;
     });
 
     // --- Búsqueda por prefijo (opcional) ---
@@ -84,14 +106,14 @@ void runExperiment(
     // });
 
     // --- Resultados ---
-    std::cout << std::fixed << std::setprecision(3);
-    std::cout << "Palabras insertadas: " << insertWords.size() << "\n";
-    std::cout << "Palabras buscadas:   " << searchWords.size() << "\n";
-    std::cout << "Palabras encontradas: " << found << "\n";
-    std::cout << "Tiempo inserción:    " << insertTime << " ms\n";
-    std::cout << "Tiempo búsqueda:     " << searchTime << " ms\n";
-    // std::cout << "Tiempo prefijos:     " << prefixTime << " ms\n";
-    std::cout << "Memoria usada:       " << (memAfter - memBefore) << " KB\n";
+    cout << fixed << setprecision(3);
+    cout << "Palabras insertadas: " << insertWords.size() << "\n";
+    cout << "Palabras buscadas:   " << searchWords.size() << "\n";
+    cout << "Palabras encontradas: " << found << "\n";
+    cout << "Tiempo inserción:    " << insertTime << " ms\n";
+    cout << "Tiempo búsqueda:     " << searchTime << " ms\n";
+    // cout << "Tiempo prefijos:     " << prefixTime << " ms\n";
+    cout << "Memoria usada:       " << (memAfter - memBefore) << " KB\n";
 }
 
 // ===========================================
@@ -100,12 +122,21 @@ void runExperiment(
 
 int main() {
     // Rutas a tus datasets
-    std::string insertDatasetPath = "../main/Alice_in_Wonderland.txt";       // dataset grande para construcción
-    std::string searchDatasetPath = "../main/dataset_busqueda_Alice.txt"; // dataset mixto de búsqueda
+    // Assuming the project structure:
+    // project_root/
+    //   ├── sources/
+    //   │   ├── src/
+    //   │   │   └── experiments.cpp
+    //   │   └── main/
+    //   │       ├── Alice_in_Wonderland.txt
+    //   │       └── dataset_busqueda_Alice.txt
+    string insertDatasetPath = "sources/main/Alice_in_Wonderland.txt";
+    string searchDatasetPath = "sources/main/dataset_busqueda_Alice.txt";
+
 
     // Cargar datasets
-    std::vector<std::string> insertWords = loadDataset(insertDatasetPath);
-    std::vector<std::string> searchWords = loadDataset(searchDatasetPath);
+    vector<string> insertWords = loadDataset(insertDatasetPath);
+    vector<string> searchWords = loadDataset(searchDatasetPath);
 
     // Crear estructuras
     NaiveTrie trie;

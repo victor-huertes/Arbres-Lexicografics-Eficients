@@ -68,7 +68,7 @@ public:
      * 
      * TODO: Implementar
      */
-    vector<int> search(const string& word);
+    vector<int> search_position(const string& word);
     
     /**
      * @brief Encuentra palabras que comienzan con un prefijo
