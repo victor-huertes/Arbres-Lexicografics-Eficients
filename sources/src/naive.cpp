@@ -5,22 +5,28 @@
 NaiveTrie::NaiveTrie() : root(make_unique<TrieNode>()) {}
 
 // Inicializa el trie con un texto (inserta todos los sufijos)
-void NaiveTrie::init(const string& text) {
+void NaiveTrie::init(const string &text)
+{
     clear();
-    for (size_t i = 0; i < text.length(); ++i) {
+    for (size_t i = 0; i < text.length(); ++i)
+    {
         string suffix = text.substr(i);
         insert(suffix, i);
     }
 }
 
 // Insertar una palabra y su posición
-void NaiveTrie::insert(const string& word, int position) {
-    if (word.empty()) return;
+void NaiveTrie::insert(const string &word, int position)
+{
+    if (word.empty())
+        return;
 
-    TrieNode* current = root.get();
+    TrieNode *current = root.get();
 
-    for (unsigned char idx : word) {
-        if (!current->children[idx]) {
+    for (unsigned char idx : word)
+    {
+        if (!current->children[idx])
+        {
             current->children[idx] = new TrieNode();
         }
         current = current->children[idx];
@@ -31,91 +37,114 @@ void NaiveTrie::insert(const string& word, int position) {
 }
 
 // Buscar palabra y devolver posiciones
-vector<int> NaiveTrie::search_positions(const string& word) const {
+vector<int> NaiveTrie::search_positions(const string &word) const
+{
     vector<int> positions;
-    if (word.empty()) return positions;
+    if (word.empty())
+        return positions;
 
-    TrieNode* current = root.get();
+    TrieNode *current = root.get();
 
-    for (unsigned char idx : word) {
-        if (!current->children[idx]) {
+    for (unsigned char idx : word)
+    {
+        if (!current->children[idx])
+        {
             return positions;
         }
         current = current->children[idx];
     }
 
-    if (!current->index.empty()) {
+    if (!current->index.empty())
+    {
         positions = current->index;
     }
     return positions;
 }
 
 // Encontrar palabras que comienzan con un prefijo (devuelve posiciones)
-vector<int> NaiveTrie::starts_with_positions(const string& prefix) const {
+vector<int> NaiveTrie::starts_with_positions(const string &prefix) const
+{
     vector<int> positions;
-    if (prefix.empty()) return positions;
-    
-    TrieNode* current = root.get();
-    
-    for (unsigned char idx : prefix) {
-        if(!current->children[idx]) {
+    if (prefix.empty())
+        return positions;
+
+    TrieNode *current = root.get();
+
+    for (unsigned char idx : prefix)
+    {
+        if (!current->children[idx])
+        {
             return positions;
         }
         current = current->children[idx];
     }
-    
+
     // Recolectar todas las posiciones del subárbol
     collect_positions_from_subtree(current, positions);
     return positions;
 }
 
 // Función auxiliar para recolectar posiciones
-void NaiveTrie::collect_positions_from_subtree(TrieNode* node, vector<int>& positions) const {
-    if (!node) return;
-    
-    if (!node->index.empty()) {
+void NaiveTrie::collect_positions_from_subtree(TrieNode *node, vector<int> &positions) const
+{
+    if (!node)
+        return;
+
+    if (!node->index.empty())
+    {
         positions.insert(positions.end(), node->index.begin(), node->index.end());
     }
-    
-    for (size_t i = 0; i < node->children.size(); ++i) {
-        if (node->children[i]) {
+
+    for (size_t i = 0; i < node->children.size(); ++i)
+    {
+        if (node->children[i])
+        {
             collect_positions_from_subtree(node->children[i], positions);
         }
     }
 }
 
 // Autocomplete: devuelve todas las palabras que empiezan por un prefijo
-vector<pair<string, int>> NaiveTrie::autocomplete(const string& prefix) const {
+vector<pair<string, int>> NaiveTrie::autocomplete(const string &prefix) const
+{
     vector<pair<string, int>> results;
-    
-    TrieNode* current = root.get();
-    
+
+    TrieNode *current = root.get();
+
     // Navegar hasta el final del prefix
-    for (unsigned char idx : prefix) {
-        if (!current->children[idx]) {
+    for (unsigned char idx : prefix)
+    {
+        if (!current->children[idx])
+        {
             return results;
         }
         current = current->children[idx];
     }
-    
+
     // Recolectar todas las palabras que comienzan con este prefix
     collect_words_with_positions(current, prefix, results);
-    
+
     return results;
 }
 
 // Función auxiliar para recolectar palabras con posiciones
-void NaiveTrie::collect_words_with_positions(TrieNode* node, const string& prefix, vector<pair<string, int>>& results) const {
-    if (!node) return;
-    
-    if (!node->index.empty()) {
-        for (int pos : node->index) {
+void NaiveTrie::collect_words_with_positions(TrieNode *node, const string &prefix, vector<pair<string, int>> &results) const
+{
+    if (!node)
+        return;
+
+    if (!node->index.empty())
+    {
+        for (int pos : node->index)
+        {
             results.push_back({prefix, pos});
         }
     }
-    
-    for (size_t i = 0; i < node->children.size(); ++i) {
-        if (node->children[i]) {
+
+    for (size_t i = 0; i < node->children.size(); ++i)
+    {
+        if (node->children[i])
+        {
             char next_char = static_cast<char>(i); // Ya no sumamos '0'
             collect_words_with_positions(node->children[i], prefix + next_char, results);
         }
@@ -123,17 +152,22 @@ void NaiveTrie::collect_words_with_positions(TrieNode* node, const string& prefi
 }
 
 // Obtener todas las palabras del trie
-vector<pair<string, int>> NaiveTrie::get_words() const {
+vector<pair<string, int>> NaiveTrie::get_words() const
+{
     return autocomplete("");
 }
 
-void NaiveTrie::insert(const string& word) {
-    if (word.empty()) return;
+void NaiveTrie::insert(const string &word)
+{
+    if (word.empty())
+        return;
 
-    TrieNode* current = root.get();
+    TrieNode *current = root.get();
 
-    for (unsigned char idx : word) {
-        if (!current->children[idx]) {
+    for (unsigned char idx : word)
+    {
+        if (!current->children[idx])
+        {
             current->children[idx] = new TrieNode();
         }
         current = current->children[idx];
@@ -143,13 +177,17 @@ void NaiveTrie::insert(const string& word) {
     current->end_of_word = true;
 }
 
-bool NaiveTrie::search(const string& word) const {
-    if (word.empty()) return false;
+bool NaiveTrie::search(const string &word) const
+{
+    if (word.empty())
+        return false;
 
-    TrieNode* current = root.get();
+    TrieNode *current = root.get();
 
-    for (unsigned char idx : word) {
-        if (!current->children[idx]) {
+    for (unsigned char idx : word)
+    {
+        if (!current->children[idx])
+        {
             return false;
         }
         current = current->children[idx];
@@ -157,9 +195,9 @@ bool NaiveTrie::search(const string& word) const {
 
     return !current->index.empty();
     /* if (word.empty()) return false;
-    
+
     TrieNode* current = root.get();
-    
+
     for (char c : word) {
         auto it = current->children.find(c);
         if (it == current->children.end()) {
@@ -167,67 +205,115 @@ bool NaiveTrie::search(const string& word) const {
         }
         current = it->second.get();
     }
-    
+
     return current->index; */
 }
 
-bool NaiveTrie::starts_with(const string& prefix) const {
-    if (prefix.empty()) return true;
-    
-    TrieNode* current = root.get();
-    
-    for (unsigned char idx : prefix) {
-        if(!current->children[idx]) return false;
+bool NaiveTrie::starts_with(const string &prefix) const
+{
+    if (prefix.empty())
+        return true;
+
+    TrieNode *current = root.get();
+
+    for (unsigned char idx : prefix)
+    {
+        if (!current->children[idx])
+            return false;
         current = current->children[idx];
     }
-    
+
     return true;
 }
 
-vector<string> NaiveTrie::get_words_with_prefix(const string& prefix) const {
+vector<string> NaiveTrie::get_words_with_prefix(const string &prefix) const
+{
     vector<string> results;
-    
-    if (!starts_with(prefix)) {
+
+    if (!starts_with(prefix))
+    {
         return results;
     }
-    
-    TrieNode* current = root.get();
-    
+
+    TrieNode *current = root.get();
+
     // Navegar fins al final del prefix
-    for (unsigned char idx : prefix) {
+    for (unsigned char idx : prefix)
+    {
         current = current->children[idx];
-        if (!current) return results;
+        if (!current)
+            return results;
     }
-    
+
     // Recollir totes les paraules que comencin amb aquest prefix
     collect_words_with_prefix(current, prefix, results);
-    
+
     return results;
 }
 
-void NaiveTrie::collect_words_with_prefix(TrieNode* node, const string& prefix, vector<string>& results) const {
-    if (!node->index.empty()) {
+void NaiveTrie::collect_words_with_prefix(TrieNode *node, const string &prefix, vector<string> &results) const
+{
+    if (!node->index.empty())
+    {
         results.push_back(prefix);
     }
-    
-    for (size_t i = 0; i < node->children.size(); ++i) {
-        if (node->children[i]) {
+
+    for (size_t i = 0; i < node->children.size(); ++i)
+    {
+        if (node->children[i])
+        {
             char next_char = static_cast<char>(i); // Ya no sumamos '0'
             collect_words_with_prefix(node->children[i], prefix + next_char, results);
         }
     }
 }
 
-vector<string> NaiveTrie::get_all_words() const {
+vector<string> NaiveTrie::get_all_words() const
+{
     return get_words_with_prefix("");
 }
 
-bool NaiveTrie::empty() const {
+bool NaiveTrie::empty() const
+{
     return root->children.empty();
 }
 
-void NaiveTrie::clear() {
+void NaiveTrie::clear()
+{
     root = make_unique<TrieNode>();
-    root->children = vector<TrieNode*>(128, nullptr);
+    root->children = vector<TrieNode *>(128, nullptr);
     root->end_of_word = false;
+}
+
+size_t NaiveTrie::calculate_node_memory(TrieNode *node) const
+{
+    if (!node)
+        return 0;
+
+    size_t memory = 0;
+
+    // Memoria del nodo mismo
+    memory += sizeof(TrieNode);
+
+    // Memoria del vector de hijos (128 punteros)
+    memory += sizeof(TrieNode *) * 128;
+
+    // Memoria del vector de índices
+    memory += sizeof(int) * node->index.capacity();
+
+    // Recursivamente calcular memoria de los hijos
+    for (auto *child : node->children)
+    {
+        if (child)
+        {
+            memory += calculate_node_memory(child);
+        }
+    }
+
+    return memory;
+}
+
+size_t NaiveTrie::get_memory_usage() const
+{
+    return calculate_node_memory(root.get());
 }
