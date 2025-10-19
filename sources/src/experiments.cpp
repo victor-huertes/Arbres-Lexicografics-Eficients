@@ -140,7 +140,7 @@ int main()
     //   │   └── main/
     //   │       ├── Alice_in_Wonderland.txt
     //   │       └── dataset_busqueda_Alice.txt
-    string insertDatasetPath = "sources/main/Alice_in_Wonderland.txt";
+    string insertDatasetPath = "input/Alice_in_Wonderland.txt";
     string searchDatasetPath = "sources/main/dataset_busqueda_Alice.txt";
 
     // Cargar datasets
