@@ -60,6 +60,9 @@ public:
     /**
      * @brief Neteja el trie, eliminant tots els nodes.
      */
+<<<<<<< HEAD
+    vector<int> search_position(const string& word);
+=======
     void clear(); 
 
     /**
@@ -67,6 +70,7 @@ public:
      * @return true si el trie està buit.
      */
     bool empty() const;
+>>>>>>> 80fff3ce9266b2c092d6c1adbe766703c566f6bf
     
     // Si RadixTrie ha d'implementar la interfície 'Trie', haureu d'afegir:
     /*
