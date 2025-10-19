@@ -140,20 +140,29 @@ int main()
     //   │   └── main/
     //   │       ├── Alice_in_Wonderland.txt
     //   │       └── dataset_busqueda_Alice.txt
-    string insertDatasetPath = "input/Alice_in_Wonderland.txt";
-    string searchDatasetPath = "sources/main/dataset_busqueda_Alice.txt";
+    vector  <string> insertDatasetPath = {"input/lorem_ipsum.txt",
+        "input/bee_movie_script.txt",
+        "input/Alice_in_Wonderland.txt",
+        "input/words_alpha.txt"};
+    vector  <string> searchDatasetPath = {"input/dataset_busqueda_loremipsum.txt",
+        "input/dataset_busqueda_bee_movie.txt",
+        "input/dataset_busqueda_Alice.txt",
+        "input/dataset_busqueda_words_alpha.txt"};
 
     // Cargar datasets
-    vector<string> insertWords = loadDataset(insertDatasetPath);
-    vector<string> searchWords = loadDataset(searchDatasetPath);
+    for(size_t i = 0; i < insertDatasetPath.size(); ++i){
+    
+        vector<string> insertWords = loadDataset(insertDatasetPath[i]);
+        vector<string> searchWords = loadDataset(searchDatasetPath[i]);
 
-    // Crear estructuras
-    NaiveTrie trie;
-    RadixTrie radix;
+        // Crear estructuras
+        NaiveTrie trie;
+        RadixTrie radix;
 
-    // Ejecutar experimentos
-    runExperiment("Naive Trie", trie, insertWords, searchWords);
-    runExperiment("Radix Tree", radix, insertWords, searchWords);
-
+        cout << "DATASET: " << insertDatasetPath[i] << endl;
+        // Ejecutar experimentos
+        runExperiment("Naive Trie", trie, insertWords, searchWords);
+        runExperiment("Radix Tree", radix, insertWords, searchWords);
+    }
     return 0;
 }

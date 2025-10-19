@@ -1,0 +1,84 @@
+DATASET: input/lorem_ipsum.txt
+
+=====================================
+ Experimento: Naive Trie
+=====================================
+Palabras insertadas: 2344
+Palabras buscadas:   24
+Palabras encontradas: 18
+Tiempo inserción:    0.238 ms
+Tiempo búsqueda:     0.001 ms
+Memoria usada:       300.625 KB (307840 bytes)
+
+=====================================
+ Experimento: Radix Tree
+=====================================
+Palabras insertadas: 2344
+Palabras buscadas:   24
+Palabras encontradas: 18
+Tiempo inserción:    0.161 ms
+Tiempo búsqueda:     0.002 ms
+Memoria usada:       28.491 KB (29175 bytes)
+DATASET: input/bee_movie_script.txt
+
+=====================================
+ Experimento: Naive Trie
+=====================================
+Palabras insertadas: 9157
+Palabras buscadas:   712
+Palabras encontradas: 507
+Tiempo inserción:    7.299 ms
+Tiempo búsqueda:     0.217 ms
+Memoria usada:       6094.000 KB (6240256 bytes)
+
+=====================================
+ Experimento: Radix Tree
+=====================================
+Palabras insertadas: 9157
+Palabras buscadas:   712
+Palabras encontradas: 507
+Tiempo inserción:    3.056 ms
+Tiempo búsqueda:     0.075 ms
+Memoria usada:       452.915 KB (463785 bytes)
+DATASET: input/Alice_in_Wonderland.txt
+
+=====================================
+ Experimento: Naive Trie
+=====================================
+Palabras insertadas: 29493
+Palabras buscadas:   1196
+Palabras encontradas: 865
+Tiempo inserción:    12.368 ms
+Tiempo búsqueda:     0.493 ms
+Memoria usada:       10455.289 KB (10706216 bytes)
+
+=====================================
+ Experimento: Radix Tree
+=====================================
+Palabras insertadas: 29493
+Palabras buscadas:   1196
+Palabras encontradas: 865
+Tiempo inserción:    3.661 ms
+Tiempo búsqueda:     0.155 ms
+Memoria usada:       856.960 KB (877527 bytes)
+DATASET: input/words_alpha.txt
+
+=====================================
+ Experimento: Naive Trie
+=====================================
+Palabras insertadas: 370105
+Palabras buscadas:   148041
+Palabras encontradas: 111031
+Tiempo inserción:    1403.940 ms
+Tiempo búsqueda:     202.465 ms
+Memoria usada:       1085464.082 KB (1111515220 bytes)
+
+=====================================
+ Experimento: Radix Tree
+=====================================
+Palabras insertadas: 370105
+Palabras buscadas:   148041
+Palabras encontradas: 111031
+Tiempo inserción:    240.310 ms
+Tiempo búsqueda:     210.418 ms
+Memoria usada:       83611.979 KB (85618666 bytes)
