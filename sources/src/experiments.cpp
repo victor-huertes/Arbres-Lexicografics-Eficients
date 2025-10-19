@@ -163,6 +163,8 @@ int main()
         // Ejecutar experimentos
         runExperiment("Naive Trie", trie, insertWords, searchWords);
         runExperiment("Radix Tree", radix, insertWords, searchWords);
+
+        cout << endl;
     }
     return 0;
 }

@@ -45,7 +45,7 @@ std::string randomWord(std::mt19937& rng) {
 
 void generateSearchDataset(const std::string& inputFile,
                            const std::string& outputFile,
-                           double realRatio = 0.3,
+                           double realRatio = 0.5,
                            double fakeRatio = 0.1,
                            size_t maxFake = 50000) {
     std::cout << "Procesando archivo: " << inputFile << std::endl;
@@ -102,8 +102,7 @@ void generateSearchDataset(const std::string& inputFile,
 int main() {
     // Archivos base y destinos
     std::vector<std::pair<std::string, std::string>> datasets = {
-        {"bee_movie_script.txt", "dataset_busqueda_bee_movie.txt"},
-        {"words_alpha.txt", "dataset_busqueda_words_alpha.txt"}
+        {"lorem_ipsum.txt", "dataset_busqueda_loremipsum.txt"},
     };
 
     for (auto& [input, output] : datasets) {

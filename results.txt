@@ -4,21 +4,22 @@ DATASET: input/lorem_ipsum.txt
  Experimento: Naive Trie
 =====================================
 Palabras insertadas: 2344
-Palabras buscadas:   24
-Palabras encontradas: 18
-Tiempo inserción:    0.238 ms
-Tiempo búsqueda:     0.001 ms
+Palabras buscadas:   37
+Palabras encontradas: 31
+Tiempo inserción:    0.340 ms
+Tiempo búsqueda:     0.002 ms
 Memoria usada:       300.625 KB (307840 bytes)
 
 =====================================
  Experimento: Radix Tree
 =====================================
 Palabras insertadas: 2344
-Palabras buscadas:   24
-Palabras encontradas: 18
-Tiempo inserción:    0.161 ms
-Tiempo búsqueda:     0.002 ms
+Palabras buscadas:   37
+Palabras encontradas: 31
+Tiempo inserción:    0.164 ms
+Tiempo búsqueda:     0.003 ms
 Memoria usada:       28.491 KB (29175 bytes)
+
 DATASET: input/bee_movie_script.txt
 
 =====================================
@@ -27,8 +28,8 @@ DATASET: input/bee_movie_script.txt
 Palabras insertadas: 9157
 Palabras buscadas:   712
 Palabras encontradas: 507
-Tiempo inserción:    7.299 ms
-Tiempo búsqueda:     0.217 ms
+Tiempo inserción:    8.137 ms
+Tiempo búsqueda:     0.244 ms
 Memoria usada:       6094.000 KB (6240256 bytes)
 
 =====================================
@@ -37,9 +38,10 @@ Memoria usada:       6094.000 KB (6240256 bytes)
 Palabras insertadas: 9157
 Palabras buscadas:   712
 Palabras encontradas: 507
-Tiempo inserción:    3.056 ms
-Tiempo búsqueda:     0.075 ms
+Tiempo inserción:    1.624 ms
+Tiempo búsqueda:     0.082 ms
 Memoria usada:       452.915 KB (463785 bytes)
+
 DATASET: input/Alice_in_Wonderland.txt
 
 =====================================
@@ -48,8 +50,8 @@ DATASET: input/Alice_in_Wonderland.txt
 Palabras insertadas: 29493
 Palabras buscadas:   1196
 Palabras encontradas: 865
-Tiempo inserción:    12.368 ms
-Tiempo búsqueda:     0.493 ms
+Tiempo inserción:    12.254 ms
+Tiempo búsqueda:     0.476 ms
 Memoria usada:       10455.289 KB (10706216 bytes)
 
 =====================================
@@ -58,9 +60,10 @@ Memoria usada:       10455.289 KB (10706216 bytes)
 Palabras insertadas: 29493
 Palabras buscadas:   1196
 Palabras encontradas: 865
-Tiempo inserción:    3.661 ms
-Tiempo búsqueda:     0.155 ms
+Tiempo inserción:    4.493 ms
+Tiempo búsqueda:     0.279 ms
 Memoria usada:       856.960 KB (877527 bytes)
+
 DATASET: input/words_alpha.txt
 
 =====================================
@@ -69,8 +72,8 @@ DATASET: input/words_alpha.txt
 Palabras insertadas: 370105
 Palabras buscadas:   148041
 Palabras encontradas: 111031
-Tiempo inserción:    1403.940 ms
-Tiempo búsqueda:     202.465 ms
+Tiempo inserción:    1153.790 ms
+Tiempo búsqueda:     177.265 ms
 Memoria usada:       1085464.082 KB (1111515220 bytes)
 
 =====================================
@@ -79,6 +82,7 @@ Memoria usada:       1085464.082 KB (1111515220 bytes)
 Palabras insertadas: 370105
 Palabras buscadas:   148041
 Palabras encontradas: 111031
-Tiempo inserción:    240.310 ms
-Tiempo búsqueda:     210.418 ms
+Tiempo inserción:    227.316 ms
+Tiempo búsqueda:     153.348 ms
 Memoria usada:       83611.979 KB (85618666 bytes)
+
