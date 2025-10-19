@@ -11,3 +11,4 @@ COSAS A HACER
             empieza a buscar hasta que acaba. En la memoria analizar las diferencias entre estos tiempos
             dependiendo de la palabra que se haya buscado, si es muy larga, si es más corta, en que punto del árbol está
             (sobretodo en el radix, pq depende del punto en el que acabe o si comparte muchos prefijos será más larga o más corta)
+ //to do: implementar entrada de dataset de busqueda y métricas para comparar
