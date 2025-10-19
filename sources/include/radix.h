@@ -47,22 +47,19 @@ public:
     void insert(const string& word, int position);
     
     // Funcions de cerca (Declarades com a 'const' per al Wrapper i bones pràctiques)
-    vector<int> search(const string& word) const; 
+    vector<int> search_positions(const string& word) const; 
     vector<int> starts_with(const string& prefix) const;
     vector<pair<string, int>> autocomplete(const string& prefix) const;
     vector<pair<string, int>> get_words() const;
 
     // Funcions de compatibilitat (si són necessàries a 'main.cpp')
     void insert(const string& word) { insert(word, -1); } // Posició fictícia
-    bool search_bool(const string& word) const { return !search(word).empty(); }
+    bool search_bool(const string& word) const { return !search_positions(word).empty(); }
     bool starts_with_bool(const string& prefix) const { return !starts_with(prefix).empty(); }
 
     /**
      * @brief Neteja el trie, eliminant tots els nodes.
      */
-<<<<<<< HEAD
-    vector<int> search_position(const string& word);
-=======
     void clear(); 
 
     /**
@@ -70,7 +67,6 @@ public:
      * @return true si el trie està buit.
      */
     bool empty() const;
->>>>>>> 80fff3ce9266b2c092d6c1adbe766703c566f6bf
     
     // Si RadixTrie ha d'implementar la interfície 'Trie', haureu d'afegir:
     /*

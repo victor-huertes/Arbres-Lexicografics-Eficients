@@ -1,4 +1,4 @@
-#include "../src/radixDone.cpp"
+#include "../src/radix.cpp"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -44,7 +44,7 @@ int main() {
         string word;
         cout << "Introdueix la paraula a cercar: ";
         cin >> word;
-        vector<int> positions = trie.search(word);
+        vector<int> positions = trie.search_positions(word);
         cout << "Positions of word '" << word << "': ";
         for (int pos : positions) {
             cout << pos << " ";

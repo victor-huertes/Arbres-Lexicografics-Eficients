@@ -111,7 +111,7 @@ void RadixTrie::insert(const string& word, int position) {
 
 
 // Cercar paraula i retornar posicions (Implementació const)
-vector<int> RadixTrie::search(const string& word) const {
+vector<int> RadixTrie::search_positions(const string& word) const {
     if (word.empty()) return {};
 
     RadixNode* current = root.get();

@@ -17,7 +17,7 @@
 
 // Incluye tus implementaciones reales
 #include "../include/naive.h"
-#include "../include/radixDone.h"
+#include "../include/radix.h"
 
 using namespace std;
 
@@ -143,7 +143,7 @@ int main() {
     RadixTrie radix;
 
     // Ejecutar experimentos
-    runExperiment("Naive Trie", trie, insertWords, searchWords);
+   // runExperiment("Naive Trie", trie, insertWords, searchWords);
     runExperiment("Radix Tree", radix, insertWords, searchWords);
 
     return 0;
