@@ -150,13 +150,15 @@ vector<int> RadixTrie::search_positions(const string &word) const
         if (match_len == remaining_word.length())
         {
             // La paraula busqueda acaba aquí.
-            // Només és vàlida si coincideix amb el prefix de l'etiqueta del fill.
-            if (match_len <= child->label.length())
+            // Només és vàlida si coincideix EXACTAMENT amb l'etiqueta del fill
+            if (match_len == child->label.length())
             {
+                // Coincidència exacta amb l'etiqueta
                 return child->is_end_of_key ? child->positions : vector<int>{};
             }
             else
             {
+                // La paraula de cerca és un prefix de l'etiqueta, però no és una paraula completa
                 return {};
             }
         }
