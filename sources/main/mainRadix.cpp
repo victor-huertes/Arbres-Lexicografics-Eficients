@@ -1,4 +1,4 @@
-#include "../src/radix.cpp"
+#include "../src/radixDone.cpp"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -57,7 +57,6 @@ int main() {
         readFromFile(trie, filename);
     } else {
         cout << "Opción no válida." << endl;
-        return 0;
     }
     cout << endl;
     }
