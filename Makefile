@@ -36,6 +36,7 @@ YELLOW = \033[0;33m
 BLUE = \033[0;34m
 NC = \033[0m # No Color
 
+
 # Target per defecte
 .PHONY: all
 all: $(TARGET)
