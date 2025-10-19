@@ -4,98 +4,80 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <memory>
+#include <unordered_map>
 using namespace std;
 
 /**
- * @brief Implementación de un Radix Trie
- * 
- * Un Radix Trie (también conocido como radix tree o compact prefix tree) es una 
- * estructura de datos optimizada para almacenar strings que comprime ramas 
- * lineales en nodos individuales.
+ * @brief Implementació d'un Radix Trie (Trie compacte)
  */
 class RadixTrie {
 private:
     /**
-     * @brief Nodo interno del Radix Trie
+     * @brief Node intern del Radix Trie.
+     * label: El substring comprimit.
+     * children: Map de char (primer caràcter de l'etiqueta del fill) a punter al fill.
+     * positions: Llista de posicions on comença la clau (paraula/sufix).
+     * is_end_of_key: Marca si aquest node representa el final d'una clau vàlida.
      */
     struct RadixNode {
-        // TODO: Definir estructura del nodo
-        // - Etiqueta/substring almacenado
-        // - Hijos del nodo
-        // - Posiciones donde aparece la palabra
-        // - Marcador de fin de palabra
+        string label;
+        // Utilitzem unique_ptr per a la gestió automàtica de la memòria
+        unordered_map<char, unique_ptr<RadixNode>> children; 
+        vector<int> positions;
+        bool is_end_of_key;
+
+        // Constructor
+        RadixNode(const string& l = "") : label(l), is_end_of_key(false) {}
     };
     
-    RadixNode* root;
+    unique_ptr<RadixNode> root;
     
-    // TODO: Añadir funciones auxiliares privadas aquí
-    
+    // Funcions auxiliars privades per a recorreguts:
+    void collect_words_recursive(RadixNode* node, string current_prefix, vector<pair<string, int>>& results) const;
+    void collect_positions_recursive(RadixNode* node, vector<int>& positions) const;
+
 public:
-    /**
-     * @brief Constructor del RadixTrie
-     */
+    // Constructor i Destructor
     RadixTrie();
-    
-    /**
-     * @brief Destructor del RadixTrie
-     */
-    ~RadixTrie();
-    
-    /**
-     * @brief Inicializa el trie con un texto (inserta todos los sufijos del texto)
-     * @param text Texto a procesar
-     * 
-     * TODO: Implementar
-     * Ejemplo:
-     *   texto = "Hola"
-     *   (palabra, posicion)[] = [("Hola", 0), ("ola", 1), ("la", 2), ("a", 3)]
-     */
+    ~RadixTrie() = default; // unique_ptr s'encarrega de l'alliberament
+
+    // Funcions d'indexació
     void init(const string& text);
-    
-    /**
-     * @brief Inserta una palabra y su posición en el trie
-     * @param word Palabra a insertar
-     * @param position Posición de la palabra en el texto original
-     * 
-     * TODO: Implementar
-     */
     void insert(const string& word, int position);
     
+    // Funcions de cerca (Declarades com a 'const' per al Wrapper i bones pràctiques)
+    vector<int> search(const string& word) const; 
+    vector<int> starts_with(const string& prefix) const;
+    vector<pair<string, int>> autocomplete(const string& prefix) const;
+    vector<pair<string, int>> get_words() const;
+
+    // Funcions de compatibilitat (si són necessàries a 'main.cpp')
+    void insert(const string& word) { insert(word, -1); } // Posició fictícia
+    bool search_bool(const string& word) const { return !search(word).empty(); }
+    bool starts_with_bool(const string& prefix) const { return !starts_with(prefix).empty(); }
+
     /**
-     * @brief Busca una palabra y devuelve las posiciones donde aparece
-     * @param word Palabra a buscar
-     * @return Vector con las posiciones donde aparece la palabra
-     * 
-     * TODO: Implementar
+     * @brief Neteja el trie, eliminant tots els nodes.
      */
-    vector<int> search(const string& word);
+    void clear(); 
+
+    /**
+     * @brief Comprova si el trie conté alguna paraula.
+     * @return true si el trie està buit.
+     */
+    bool empty() const;
     
-    /**
-     * @brief Encuentra palabras que comienzan con un prefijo
-     * @param prefix Prefijo a buscar
-     * @return Vector con las posiciones de palabras que comienzan con el prefijo
-     * 
-     * TODO: Implementar
-     */
-    vector<int> starts_with(const string& prefix);
-    
-    /**
-     * @brief Devuelve todas las palabras que empiezan por un prefijo
-     * @param prefix Prefijo a buscar
-     * @return Vector de pares (palabra, posición) que comienzan con el prefijo
-     * 
-     * TODO: Implementar
-     * Es como un starts_with(...) pero busca la palabra en cada texto
-     */
-    vector<pair<string, int>> autocomplete(const string& prefix);
-    
-    /**
-     * @brief Obtiene todas las palabras del trie
-     * @return Vector de pares (palabra, posición)
-     * 
-     * TODO: Implementar
-     */
-    vector<pair<string, int>> get_words();
+    // Si RadixTrie ha d'implementar la interfície 'Trie', haureu d'afegir:
+    /*
+    bool search(const string& word) const override;
+    bool starts_with(const string& prefix) const override;
+    vector<string> get_words_with_prefix(const string& prefix) const override;
+    vector<string> get_all_words() const override;
+    // ...etc
+    */
 };
+
+// **Nota:** No incloc el 'RadixTrieWrapper' aquí, ja que normalment es defineix a 'main.cpp'.
 
 #endif // RADIX_H
