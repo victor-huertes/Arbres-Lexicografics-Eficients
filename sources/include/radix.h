@@ -45,7 +45,15 @@ public:
     ~RadixTrie() = default; // unique_ptr s'encarrega de l'alliberament
 
     // Funcions d'indexació
-    void init(const string &text);
+    /**
+     * @brief Inicialitza el trie amb un text
+     * @param text Text a processar
+     * @param mode Mode d'inicialització:
+     *             0 - Insereix paraules separades per espais/caràcters especials amb posició en el text
+     *             1 - Insereix paraules de cada línia amb el número de línia com a posició
+     *             2 - Insereix tots els substrings de longitud 1 a 20 amb la seva posició inicial
+     */
+    void init(const string &text, int mode = 0);
     void insert(const string &word, int position);
 
     // Funcions de cerca (Declarades com a 'const' per al Wrapper i bones pràctiques)

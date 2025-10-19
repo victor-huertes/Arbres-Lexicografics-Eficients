@@ -1,17 +1,99 @@
 #include "../include/naive.h"
 #include <algorithm>
 #include <iostream>
+#include <sstream>
+#include <cctype>
 
 NaiveTrie::NaiveTrie() : root(make_unique<TrieNode>()) {}
 
-// Inicializa el trie con un texto (inserta todos los sufijos)
-void NaiveTrie::init(const string &text)
+// Inicializa el trie con un texto
+void NaiveTrie::init(const string &text, int mode)
 {
     clear();
-    for (size_t i = 0; i < text.length(); ++i)
-    {
-        string suffix = text.substr(i);
-        insert(suffix, i);
+    
+    if (mode == 0) {
+        // Modo 0: Insertar palabras separadas por espacios/caracteres especiales
+        // Similar al procesamiento del loadDataset en experiments.cpp
+        string word;
+        int position = 0;
+        
+        for (size_t i = 0; i < text.length(); ++i) {
+            char c = text[i];
+            
+            // Si es alfanumérico, añadirlo a la palabra actual
+            if (isalnum(c)) {
+                if (word.empty()) {
+                    position = i; // Guardar la posición inicial de la palabra
+                }
+                word += tolower(c); // Convertir a minúscula
+            } 
+            // Si no es alfanumérico y tenemos una palabra, insertarla
+            else if (!word.empty()) {
+                insert(word, position);
+                word.clear();
+            }
+        }
+        
+        // Insertar la última palabra si existe
+        if (!word.empty()) {
+            insert(word, position);
+        }
+    }
+    else if (mode == 1) {
+        // Modo 1: Insertar palabras de cada línea con el número de línea como posición
+        istringstream iss(text);
+        string line;
+        int line_number = 0;
+        
+        while (getline(iss, line)) {
+            // Procesar cada palabra de la línea
+            string word;
+            for (char c : line) {
+                // Si es alfanumérico, añadirlo a la palabra actual
+                if (isalnum(c)) {
+                    word += tolower(c);
+                } 
+                // Si no es alfanumérico y tenemos una palabra, insertarla
+                else if (!word.empty()) {
+                    insert(word, line_number);
+                    word.clear();
+                }
+            }
+            
+            // Insertar la última palabra de la línea si existe
+            if (!word.empty()) {
+                insert(word, line_number);
+            }
+            
+            line_number++;
+        }
+    }
+    else if (mode == 2) {
+        // Modo 2: Insertar todos los substrings de longitud 1 a 20
+        // Optimización: Convertir todo el texto a minúsculas una sola vez
+        const int MAX_SUBSTRING_LENGTH = 20;
+        
+        // Convertir a minúsculas de forma más eficiente
+        string lower_text = text;
+        for (char &c : lower_text) {
+            c = tolower(static_cast<unsigned char>(c));
+        }
+        
+        // Insertar substrings de forma incremental (construcción carácter por carácter)
+        const size_t text_len = lower_text.length();
+        for (size_t i = 0; i < text_len; ++i) {
+            // Calcular el máximo de caracteres que podemos tomar desde esta posición
+            const int max_len = min(MAX_SUBSTRING_LENGTH, static_cast<int>(text_len - i));
+            
+            // Construir substrings incrementalmente
+            string substring;
+            substring.reserve(max_len);
+            
+            for (int len = 1; len <= max_len; ++len) {
+                substring += lower_text[i + len - 1];
+                insert(substring, i);
+            }
+        }
     }
 }
 
