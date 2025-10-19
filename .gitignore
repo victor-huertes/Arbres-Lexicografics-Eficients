@@ -54,6 +54,7 @@ Makefile.cmake
 # ==========================================
 
 # Fitxers auxiliars LaTeX
+../docs/latex/main.pdf
 *.aux
 *.bbl
 *.bcf
