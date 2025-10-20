@@ -80,33 +80,6 @@ void RadixTrie::init(const string &text, int mode)
             line_number++;
         }
     }
-    else if (mode == 2) {
-        // Modo 2: Insertar todos los substrings de longitud 1 a 20
-        // Optimización: Convertir todo el texto a minúsculas una sola vez
-        const int MAX_SUBSTRING_LENGTH = 20;
-        
-        // Convertir a minúsculas de forma más eficiente
-        string lower_text = text;
-        for (char &c : lower_text) {
-            c = tolower(static_cast<unsigned char>(c));
-        }
-        
-        // Insertar substrings de forma incremental (construcción carácter por carácter)
-        const size_t text_len = lower_text.length();
-        for (size_t i = 0; i < text_len; ++i) {
-            // Calcular el máximo de caracteres que podemos tomar desde esta posición
-            const int max_len = min(MAX_SUBSTRING_LENGTH, static_cast<int>(text_len - i));
-            
-            // Construir substrings incrementalmente
-            string substring;
-            substring.reserve(max_len);
-            
-            for (int len = 1; len <= max_len; ++len) {
-                substring += lower_text[i + len - 1];
-                insert(substring, i);
-            }
-        }
-    }
 }
 
 // Insertar una paraula i la seva posició

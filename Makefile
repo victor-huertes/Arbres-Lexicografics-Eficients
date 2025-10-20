@@ -26,13 +26,21 @@ test:
 	@g++ -std=c++17 -Wall -O2 -o bin/experiments bin/naive.o bin/radix.o bin/experiments.o
 	@./bin/experiments
 
+csv:
+	@mkdir -p bin
+	@g++ -std=c++17 -Wall -O2 -Isources/include -c sources/src/naive.cpp -o bin/naive.o
+	@g++ -std=c++17 -Wall -O2 -Isources/include -c sources/src/radix.cpp -o bin/radix.o
+	@g++ -std=c++17 -Wall -O2 -Isources/include -c sources/src/experiments_csv.cpp -o bin/experiments_csv.o
+	@g++ -std=c++17 -Wall -O2 -o bin/experiments_csv bin/naive.o bin/radix.o bin/experiments_csv.o
+	@./bin/experiments_csv
+
 pdf: 
 	@cd docs/latex && pdflatex -interaction=nonstopmode main.tex > /dev/null 2>&1
 	@cd docs/latex && pdflatex -interaction=nonstopmode main.tex > /dev/null 2>&1
 	@echo "PDF generado en docs/latex/main.pdf"
 
 clean:
-	@rm -rf bin/*.o bin/trie_demo bin/experiments
+	@rm -rf bin/*.o bin/trie_demo bin/experiments bin/experiments_csv
 	@rm -f docs/latex/*.aux docs/latex/*.log docs/latex/*.out docs/latex/*.toc docs/latex/*.fls docs/latex/*.fdb_latexmk docs/latex/*.synctex.gz
 	@echo "Archivos temporales eliminados"
 
@@ -43,6 +51,7 @@ help:
 	@echo "  make       - Compila todo el proyecto"
 	@echo "  make run   - Compila y ejecuta la interfaz de consola"
 	@echo "  make test  - Compila y ejecuta los experimentos"
+	@echo "  make csv   - Compila y ejecuta los experimentos en formato CSV"
 	@echo "  make pdf   - Compila el documento LaTeX"
 	@echo "  make clean - Limpia archivos temporales"
 	@echo "  make help  - Muestra esta ayuda"

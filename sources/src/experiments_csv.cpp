@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <cctype>
 
-#ifdef _WIN32 // no se quien lo va a ejecutar al final
+#ifdef _WIN32
 #include <windows.h>
 #include <psapi.h>
 #else
@@ -15,7 +15,6 @@
 #include <unistd.h>
 #endif
 
-// Incluye tus implementaciones reales
 #include "../include/naive.h"
 #include "../include/radix.h"
 
@@ -25,14 +24,13 @@ using namespace std;
 // FUNCIONES AUXILIARES
 // ===========================================
 
-// Carga el contenido completo de un archivo como string
 string loadTextFile(const string &filename)
 {
     ifstream file(filename);
     if (!file.is_open())
     {
-        cout << "Error: No se pudo abrir el archivo " << filename << endl;
-        exit(0);
+        cerr << "Error: No se pudo abrir el archivo " << filename << endl;
+        exit(1);
     }
     
     stringstream buffer;
@@ -40,20 +38,18 @@ string loadTextFile(const string &filename)
     return buffer.str();
 }
 
-// Carga palabras desde un archivo (una por línea) - para búsquedas
 vector<string> loadDataset(const string &filename)
 {
     ifstream file(filename);
     if (!file.is_open())
     {
-        cout << "Error: No se pudo abrir el archivo " << filename << endl;
-        exit(0);
+        cerr << "Error: No se pudo abrir el archivo " << filename << endl;
+        exit(1);
     }
     vector<string> words;
     string word;
     while (file >> word)
     {
-        // preprocess: delete special characters, lowercase letters
         word.erase(remove_if(word.begin(), word.end(),
                              [](char c)
                              { return !isalnum(c); }),
@@ -66,13 +62,13 @@ vector<string> loadDataset(const string &filename)
 
     return words;
 }
-// Mide el uso máximo de memoria (en KB)
+
 long getMemoryUsageKB()
 {
 #ifdef _WIN32
-    _PROCESS_MEMORY_COUNTERS pmc;
+    PROCESS_MEMORY_COUNTERS pmc;
     GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
-    return pmc.WorkingSetSize / 1024; // Convertir bytes a KB
+    return pmc.WorkingSetSize / 1024;
 #else
     struct rusage usage;
     getrusage(RUSAGE_SELF, &usage);
@@ -80,7 +76,6 @@ long getMemoryUsageKB()
 #endif
 }
 
-// Plantilla para medir tiempo de ejecución de una función arbitraria
 template <typename Func>
 double measureTime(Func f)
 {
@@ -92,62 +87,70 @@ double measureTime(Func f)
 }
 
 // ===========================================
-// EXPERIMENTO GENERAL
+// EXPERIMENTO PARA CSV
 // ===========================================
 
+struct ExperimentResult {
+    string dataset;
+    int mode;
+    string structure;
+    size_t palabras_buscadas;
+    size_t palabras_encontradas;
+    double tiempo_insercion_ms;
+    double tiempo_busqueda_ms;
+    double memoria_kb;
+    bool success;
+};
+
 template <typename Structure>
-bool runExperiment(
-    const string &name,
+ExperimentResult runExperimentCSV(
+    const string &structureName,
+    const string &datasetName,
     Structure &structure,
     const string &textToInsert,
     const vector<string> &searchWords,
     int initMode = 0)
 {
-    cout << "\n=====================================\n";
-    cout << " Experimento: " << name << "\n";
-    cout << "=====================================\n";
+    ExperimentResult result;
+    result.dataset = datasetName;
+    result.mode = initMode;
+    result.structure = structureName;
+    result.palabras_buscadas = searchWords.size();
+    result.success = false;
 
     try {
-        // --- Inicialización ---
-        double insertTime = measureTime([&]()
+        // Inicialización
+        result.tiempo_insercion_ms = measureTime([&]()
                                         { structure.init(textToInsert, initMode); });
 
-        // Calcular memoria del Trie
+        // Memoria
         size_t memoryBytes = structure.get_memory_usage();
-        double memoryKB = memoryBytes / 1024.0;
+        result.memoria_kb = memoryBytes / 1024.0;
 
-        // --- Búsqueda exacta ---
+        // Búsqueda
         size_t found = 0;
-        double searchTime = measureTime([&]()
+        result.tiempo_busqueda_ms = measureTime([&]()
                                         {
             for (const auto& w : searchWords)
                 if (structure.search_positions(w).size() != 0) found++; });
 
-        // --- Resultados ---
-        cout << fixed << setprecision(3);
-        cout << "Palabras buscadas:   " << searchWords.size() << "\n";
-        cout << "Palabras encontradas: " << found << "\n";
-        cout << "Tiempo inserción:    " << insertTime << " ms\n";
-        cout << "Tiempo búsqueda:     " << searchTime << " ms\n";
-        cout << "Memoria usada:       " << memoryKB << " KB\n";
-        
-        return true;
+        result.palabras_encontradas = found;
+        result.success = true;
     }
     catch (const std::bad_alloc& e) {
-        cout << "❌ ERROR: Memoria insuficiente - " << e.what() << "\n";
-        cout << "    Experimento omitido.\n";
-        return false;
-    }
-    catch (const std::exception& e) {
-        cout << "❌ ERROR: " << e.what() << "\n";
-        cout << "    Experimento omitido.\n";
-        return false;
+        result.palabras_encontradas = 0;
+        result.tiempo_insercion_ms = 0;
+        result.tiempo_busqueda_ms = 0;
+        result.memoria_kb = 0;
     }
     catch (...) {
-        cout << "❌ ERROR: Excepción desconocida\n";
-        cout << "    Experimento omitido.\n";
-        return false;
+        result.palabras_encontradas = 0;
+        result.tiempo_insercion_ms = 0;
+        result.tiempo_busqueda_ms = 0;
+        result.memoria_kb = 0;
     }
+
+    return result;
 }
 
 // ===========================================
@@ -156,15 +159,6 @@ bool runExperiment(
 
 int main()
 {
-    // Rutas a tus datasets
-    // Assuming the project structure:
-    // project_root/
-    //   ├── sources/
-    //   │   ├── src/
-    //   │   │   └── experiments.cpp
-    //   │   └── main/
-    //   │       ├── Alice_in_Wonderland.txt
-    //   │       └── dataset_busqueda_Alice.txt
     vector<string> insertDatasetPath = {"input/lorem_ipsum.txt",
                                         "input/bee_movie_script.txt",
                                         "input/Alice_in_Wonderland.txt",
@@ -174,40 +168,57 @@ int main()
                                         "input/dataset_busqueda_Alice.txt",
                                         "input/dataset_busqueda_words_alpha.txt"};
 
-    // Cargar datasets
+    // Encabezado CSV
+    cout << "Dataset,Modo,Estructura,Palabras_Buscadas,Palabras_Encontradas,Tiempo_Insercion_ms,Tiempo_Busqueda_ms,Memoria_KB,Exito" << endl;
+
+    // Recopilar resultados
+    vector<ExperimentResult> results;
+
     for (size_t i = 0; i < insertDatasetPath.size(); ++i)
     {
-        // Cargar el texto completo para inserción
         string textToInsert = loadTextFile(insertDatasetPath[i]);
-        
-        // Cargar palabras para búsqueda
         vector<string> searchWords = loadDataset(searchDatasetPath[i]);
+        
+        // Extraer nombre del dataset (sin ruta y extensión)
+        string datasetName = insertDatasetPath[i];
+        size_t lastSlash = datasetName.find_last_of("/\\");
+        if (lastSlash != string::npos) {
+            datasetName = datasetName.substr(lastSlash + 1);
+        }
+        size_t dotPos = datasetName.find_last_of(".");
+        if (dotPos != string::npos) {
+            datasetName = datasetName.substr(0, dotPos);
+        }
 
-        cout << "DATASET: " << insertDatasetPath[i] << endl;
-        
-        // Modo 0: Insertar palabras con posición en el texto
-        cout << "\n=== MODO 0: Palabras con posición en texto ===" << endl;
-        
-        // Crear estructuras
+        // Modo 0
         NaiveTrie trie_mode0;
         RadixTrie radix_mode0;
-
-        // Ejecutar experimentos con modo 0
-        runExperiment("Naive Trie (Modo 0)", trie_mode0, textToInsert, searchWords, 0);
-        runExperiment("Radix Tree (Modo 0)", radix_mode0, textToInsert, searchWords, 0);
-
-        // Modo 1: Insertar palabras con número de línea
-        cout << "\n=== MODO 1: Palabras con número de línea ===" << endl;
         
-        // Crear estructuras
+        results.push_back(runExperimentCSV("NaiveTrie", datasetName, trie_mode0, textToInsert, searchWords, 0));
+        results.push_back(runExperimentCSV("RadixTrie", datasetName, radix_mode0, textToInsert, searchWords, 0));
+
+        // Modo 1
         NaiveTrie trie_mode1;
         RadixTrie radix_mode1;
-
-        // Ejecutar experimentos con modo 1
-        runExperiment("Naive Trie (Modo 1)", trie_mode1, textToInsert, searchWords, 1);
-        runExperiment("Radix Tree (Modo 1)", radix_mode1, textToInsert, searchWords, 1);
-
-        cout << endl;
+        
+        results.push_back(runExperimentCSV("NaiveTrie", datasetName, trie_mode1, textToInsert, searchWords, 1));
+        results.push_back(runExperimentCSV("RadixTrie", datasetName, radix_mode1, textToInsert, searchWords, 1));
     }
+
+    // Imprimir resultados en formato CSV
+    cout << fixed << setprecision(3);
+    for (const auto& r : results) {
+        cout << r.dataset << ","
+             << r.mode << ","
+             << r.structure << ","
+             << r.palabras_buscadas << ","
+             << r.palabras_encontradas << ","
+             << r.tiempo_insercion_ms << ","
+             << r.tiempo_busqueda_ms << ","
+             << r.memoria_kb << ","
+             << (r.success ? "1" : "0")
+             << endl;
+    }
+
     return 0;
 }
