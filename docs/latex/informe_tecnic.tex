@@ -73,7 +73,15 @@ Pel que fa a la cerca de fragments (\texttt{search}), hem corregit la lògica pe
 
 \section{Avaluació Experimental}
 
-Aquí cal presentar l’anàlisi empírica del rendiment de les estructures implementades. Es poden descriure els conjunts de dades emprats, les proves realitzades, les mètriques recollides (temps d’execució, memòria, nodes visitats, profunditat mitjana, etc.) i mostrar els resultats obtinguts de manera gràfica o tabulada. Finalment, s’hauria de fer una interpretació crítica dels resultats, contrastant-los amb les expectatives teòriques.
+Per tal de fer una experimentació fiable, hem fet servir datasets de diferents característiques. A més, hem implementat diferents modes d'indexació per les paraules dels nostres datasets, de manera que hem analitzat els canvis que succedeixen quan canviem aquest paràmetre. 
+En aquest cas, el primer mode (o mode 0) d'indexació es basa en la indexació per posició de paraula al text. Molt senzillament ha quedat implementat com un contador incremental a mesura que s'indexen totes les paraules del nostre dataset. El segon mode es tracta d'una indexació per línia de text, útil per sets de dades amb característiques concretes. 
+*Aqui poner ejemplo de dataset donde es util* Wikipedia?? 
+
+Les mètriques que hem decidit utilitzar per realitzar l'experimentació han sigut: memòria total ocupada pels dos tipus de tries un cop fetes totes les insercions, els nodes totals, que seran proporcional a la memòria ocupada, profunditat màxima i mitjana de cada estructura i temps de cerca per unes determinades paraules. 
+Per cada fitxer que hem inserit als arbres lexicogràfics hem generat una sèrie de datasets per tal de realitzar les cerques de paraules aleatòries. Tots els datasets generats consisteixen d'un 30\% de les paraules totals del fitxer, més un 10\% de paraules que no apareixen als textos, per tal de poder estudiar també el comportament de les estructures quan la cerca de paraules resulta fallida. 
+
+\subsection{Resultats}
+Els resultats de la nostra investigació han estat força consistents amb les hipòtesis teòriques que ens haviem suposat. El Radix Tree ha demostrat ser molt superior en termes de memòria, encara que no presenta unes millores significativament altes en temps de cerca ni inserció. 
 
 \section{Conclusions}
 
