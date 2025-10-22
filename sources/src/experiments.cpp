@@ -91,6 +91,34 @@ double measureTime(Func f)
     return elapsed.count() * 1000; // milisegundos
 }
 
+// Función para guardar resultados en formato CSV
+void saveToCSV(const string& datasetName, 
+               const string& structureName,
+               int mode,
+               size_t wordsSearched,
+               size_t wordsFound,
+               double insertTime,
+               double searchTime,
+               double memoryKB,
+               const string& outputFile = "results.csv") {
+    
+    static bool headerWritten = false;
+    ofstream file(outputFile, ios::app);
+    
+    if (!headerWritten) {
+        file << "Dataset,Structure,Mode,WordsSearched,WordsFound,InsertTime,SearchTime,MemoryKB\n";
+        headerWritten = true;
+    }
+    
+    file << datasetName << ","
+         << structureName << ","
+         << mode << ","
+         << wordsSearched << ","
+         << wordsFound << ","
+         << fixed << setprecision(3) << insertTime << ","
+         << searchTime << ","
+         << memoryKB << "\n";
+}
 // ===========================================
 // EXPERIMENTO GENERAL
 // ===========================================
@@ -141,6 +169,8 @@ bool runExperiment(
         cout << "Tiempo búsqueda:     " << searchTime << " ms\n";
         cout << "Memoria usada:       " << memoryKB << " KB\n";
         
+        saveToCSV(name, " ", initMode, searchWords.size(), found, insertTime, searchTime, memoryKB);
+
         return true;
     }
     catch (const std::bad_alloc& e) {
@@ -186,7 +216,8 @@ int main()
 
     // Cargar datasets
     for (size_t i = 0; i < insertDatasetPath.size(); ++i)
-    {
+    {        
+        string dataset_name = insertDatasetPath[i].substr(insertDatasetPath[i].find_last_of("/") + 1);
         // Cargar el texto completo para inserción
         string textToInsert = loadTextFile(insertDatasetPath[i]);
         

@@ -1,0 +1,236 @@
+DATASET: input/lorem_ipsum.txt
+
+=== MODO 0: Palabras con posición en texto ===
+
+=====================================
+ Experimento: Naive Trie (Modo 0)
+=====================================
+Palabras buscadas:   37
+Palabras encontradas: 31
+Tiempo inserción:    1.040 ms
+Tiempo búsqueda:     0.014 ms
+Memoria usada:       300.625 KB
+
+=====================================
+ Experimento: Radix Tree (Modo 0)
+=====================================
+Palabras buscadas:   37
+Palabras encontradas: 31
+Tiempo inserción:    0.854 ms
+Tiempo búsqueda:     0.011 ms
+Memoria usada:       28.491 KB
+
+=== MODO 1: Palabras con número de línea ===
+
+=====================================
+ Experimento: Naive Trie (Modo 1)
+=====================================
+Palabras buscadas:   37
+Palabras encontradas: 31
+Tiempo inserción:    1.276 ms
+Tiempo búsqueda:     0.007 ms
+Memoria usada:       300.625 KB
+
+=====================================
+ Experimento: Radix Tree (Modo 1)
+=====================================
+Palabras buscadas:   37
+Palabras encontradas: 31
+Tiempo inserción:    0.821 ms
+Tiempo búsqueda:     0.010 ms
+Memoria usada:       28.491 KB
+
+=== MODO 2: Todos los substrings (1-20 chars) ===
+
+=====================================
+ Experimento: Naive Trie (Modo 2)
+=====================================
+Palabras buscadas:   37
+Palabras encontradas: 31
+Tiempo inserción:    672.928 ms
+Tiempo búsqueda:     0.048 ms
+Memoria usada:       201100.504 KB
+
+=====================================
+ Experimento: Radix Tree (Modo 2)
+=====================================
+Palabras buscadas:   37
+Palabras encontradas: 31
+Tiempo inserción:    462.293 ms
+Tiempo búsqueda:     0.061 ms
+Memoria usada:       33926.675 KB
+
+DATASET: input/bee_movie_script.txt
+
+=== MODO 0: Palabras con posición en texto ===
+
+=====================================
+ Experimento: Naive Trie (Modo 0)
+=====================================
+Palabras buscadas:   712
+Palabras encontradas: 534
+Tiempo inserción:    4.660 ms
+Tiempo búsqueda:     0.273 ms
+Memoria usada:       5817.012 KB
+
+=====================================
+ Experimento: Radix Tree (Modo 0)
+=====================================
+Palabras buscadas:   712
+Palabras encontradas: 534
+Tiempo inserción:    3.998 ms
+Tiempo búsqueda:     0.227 ms
+Memoria usada:       448.565 KB
+
+=== MODO 1: Palabras con número de línea ===
+
+=====================================
+ Experimento: Naive Trie (Modo 1)
+=====================================
+Palabras buscadas:   712
+Palabras encontradas: 534
+Tiempo inserción:    5.386 ms
+Tiempo búsqueda:     0.259 ms
+Memoria usada:       5817.012 KB
+
+=====================================
+ Experimento: Radix Tree (Modo 1)
+=====================================
+Palabras buscadas:   712
+Palabras encontradas: 534
+Tiempo inserción:    3.998 ms
+Tiempo búsqueda:     0.366 ms
+Memoria usada:       448.565 KB
+
+=== MODO 2: Todos los substrings (1-20 chars) ===
+
+=====================================
+ Experimento: Naive Trie (Modo 2)
+=====================================
+Palabras buscadas:   712
+Palabras encontradas: 534
+Tiempo inserción:    3130.529 ms
+Tiempo búsqueda:     0.907 ms
+Memoria usada:       753520.875 KB
+
+=====================================
+ Experimento: Radix Tree (Modo 2)
+=====================================
+Palabras buscadas:   712
+Palabras encontradas: 534
+Tiempo inserción:    1726.793 ms
+Tiempo búsqueda:     1.303 ms
+Memoria usada:       126370.835 KB
+
+DATASET: input/Alice_in_Wonderland.txt
+
+=== MODO 0: Palabras con posición en texto ===
+
+=====================================
+ Experimento: Naive Trie (Modo 0)
+=====================================
+Palabras buscadas:   1196
+Palabras encontradas: 897
+Tiempo inserción:    11.275 ms
+Tiempo búsqueda:     0.805 ms
+Memoria usada:       9418.898 KB
+
+=====================================
+ Experimento: Radix Tree (Modo 0)
+=====================================
+Palabras buscadas:   1196
+Palabras encontradas: 897
+Tiempo inserción:    11.418 ms
+Tiempo búsqueda:     0.455 ms
+Memoria usada:       821.304 KB
+
+=== MODO 1: Palabras con número de línea ===
+
+=====================================
+ Experimento: Naive Trie (Modo 1)
+=====================================
+Palabras buscadas:   1196
+Palabras encontradas: 897
+Tiempo inserción:    11.346 ms
+Tiempo búsqueda:     0.630 ms
+Memoria usada:       9418.898 KB
+
+=====================================
+ Experimento: Radix Tree (Modo 1)
+=====================================
+Palabras buscadas:   1196
+Palabras encontradas: 897
+Tiempo inserción:    12.400 ms
+Tiempo búsqueda:     0.461 ms
+Memoria usada:       821.304 KB
+
+=== MODO 2: Todos los substrings (1-20 chars) ===
+
+=====================================
+ Experimento: Naive Trie (Modo 2)
+=====================================
+⚠️  OMITIDO: Texto demasiado grande para Modo 2 (174355 chars > 50000 límite)
+    El Modo 2 genera ~3487100 substrings, lo cual excedería la memoria disponible.
+
+=====================================
+ Experimento: Radix Tree (Modo 2)
+=====================================
+⚠️  OMITIDO: Texto demasiado grande para Modo 2 (174355 chars > 50000 límite)
+    El Modo 2 genera ~3487100 substrings, lo cual excedería la memoria disponible.
+
+DATASET: input/words_alpha.txt
+
+=== MODO 0: Palabras con posición en texto ===
+
+=====================================
+ Experimento: Naive Trie (Modo 0)
+=====================================
+Palabras buscadas:   148041
+Palabras encontradas: 111031
+Tiempo inserción:    3777.818 ms
+Tiempo búsqueda:     360.028 ms
+Memoria usada:       1085464.082 KB
+
+=====================================
+ Experimento: Radix Tree (Modo 0)
+=====================================
+Palabras buscadas:   148041
+Palabras encontradas: 111031
+Tiempo inserción:    739.311 ms
+Tiempo búsqueda:     322.636 ms
+Memoria usada:       83611.979 KB
+
+=== MODO 1: Palabras con número de línea ===
+
+=====================================
+ Experimento: Naive Trie (Modo 1)
+=====================================
+Palabras buscadas:   148041
+Palabras encontradas: 111031
+Tiempo inserción:    4749.045 ms
+Tiempo búsqueda:     319.771 ms
+Memoria usada:       1085464.082 KB
+
+=====================================
+ Experimento: Radix Tree (Modo 1)
+=====================================
+Palabras buscadas:   148041
+Palabras encontradas: 111031
+Tiempo inserción:    870.068 ms
+Tiempo búsqueda:     319.333 ms
+Memoria usada:       83611.979 KB
+
+=== MODO 2: Todos los substrings (1-20 chars) ===
+
+=====================================
+ Experimento: Naive Trie (Modo 2)
+=====================================
+⚠️  OMITIDO: Texto demasiado grande para Modo 2 (4234910 chars > 50000 límite)
+    El Modo 2 genera ~84698200 substrings, lo cual excedería la memoria disponible.
+
+=====================================
+ Experimento: Radix Tree (Modo 2)
+=====================================
+⚠️  OMITIDO: Texto demasiado grande para Modo 2 (4234910 chars > 50000 límite)
+    El Modo 2 genera ~84698200 substrings, lo cual excedería la memoria disponible.
+
