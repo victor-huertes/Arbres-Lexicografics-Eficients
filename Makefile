@@ -38,7 +38,6 @@ csv:
 
 plot: 
 	@cd output && gnuplot -p ../sources/utils/script.gnuplot
-	@cd output && gnuplot -p ../sources/utils/scriptlog.gnuplot
 	@echo "Generados graficos con gnuplot en /output"
 
 pdf: 
