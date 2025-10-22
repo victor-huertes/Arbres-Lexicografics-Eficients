@@ -135,16 +135,6 @@ bool runExperiment(
     cout << " Experimento: " << name << "\n";
     cout << "=====================================\n";
 
-    // Límite de seguridad para Modo 2: máximo 50KB de texto
-    const size_t MAX_TEXT_SIZE_MODE2 = 50000;
-    if (initMode == 2 && textToInsert.length() > MAX_TEXT_SIZE_MODE2) {
-        cout << "⚠️  OMITIDO: Texto demasiado grande para Modo 2 (" 
-             << textToInsert.length() << " chars > " << MAX_TEXT_SIZE_MODE2 << " límite)\n";
-        cout << "    El Modo 2 genera ~" << textToInsert.length() * 20 
-             << " substrings, lo cual excedería la memoria disponible.\n";
-        return false;
-    }
-
     try {
         // --- Inicialización ---
         double insertTime = measureTime([&]()
@@ -247,17 +237,6 @@ int main()
         // Ejecutar experimentos con modo 1
         runExperiment("Naive Trie (Modo 1)", trie_mode1, textToInsert, searchWords, 1);
         runExperiment("Radix Tree (Modo 1)", radix_mode1, textToInsert, searchWords, 1);
-
-        // Modo 2: Insertar todos los substrings (1 a 20 chars)
-        cout << "\n=== MODO 2: Todos los substrings (1-20 chars) ===" << endl;
-        
-        // Crear estructuras
-        NaiveTrie trie_mode2;
-        RadixTrie radix_mode2;
-
-        // Ejecutar experimentos con modo 2
-        runExperiment("Naive Trie (Modo 2)", trie_mode2, textToInsert, searchWords, 2);
-        runExperiment("Radix Tree (Modo 2)", radix_mode2, textToInsert, searchWords, 2);
 
         cout << endl;
     }

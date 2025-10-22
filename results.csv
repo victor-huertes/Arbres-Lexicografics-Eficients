@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Dataset,Structure,Mode,WordsSearched,WordsFound,InsertTime,SearchTime,MemoryKB
 Naive Trie (Modo 0), ,0,37,31,1.028,0.013,300.625
 Radix Tree (Modo 0), ,0,37,31,0.759,0.011,28.491
@@ -19,3 +20,22 @@ Naive Trie (Modo 0), ,0,148041,111031,3860.712,296.865,1085464.082
 Radix Tree (Modo 0), ,0,148041,111031,847.549,294.524,83611.979
 Naive Trie (Modo 1), ,1,148041,111031,5126.524,279.107,1085464.082
 Radix Tree (Modo 1), ,1,148041,111031,862.451,281.420,83611.979
+=======
+Dataset,Modo,Estructura,Palabras_Buscadas,Palabras_Encontradas,Tiempo_Insercion_ms,Tiempo_Busqueda_ms,Memoria_KB,Exito
+lorem_ipsum,0,NaiveTrie,37,31,0.190,0.003,300.625,1
+lorem_ipsum,0,RadixTrie,37,31,0.218,0.003,28.491,1
+lorem_ipsum,1,NaiveTrie,37,31,0.210,0.002,300.625,1
+lorem_ipsum,1,RadixTrie,37,31,0.229,0.003,28.491,1
+bee_movie_script,0,NaiveTrie,712,534,1.899,0.052,5817.012,1
+bee_movie_script,0,RadixTrie,712,534,1.377,0.087,448.565,1
+bee_movie_script,1,NaiveTrie,712,534,2.014,0.052,5817.012,1
+bee_movie_script,1,RadixTrie,712,534,1.527,0.087,448.565,1
+Alice_in_Wonderland,0,NaiveTrie,1196,897,4.192,0.149,9418.898,1
+Alice_in_Wonderland,0,RadixTrie,1196,897,4.196,0.179,821.304,1
+Alice_in_Wonderland,1,NaiveTrie,1196,897,4.399,0.109,9418.898,1
+Alice_in_Wonderland,1,RadixTrie,1196,897,4.590,0.182,821.304,1
+words_alpha,0,NaiveTrie,148041,111031,290.837,97.853,1085464.082,1
+words_alpha,0,RadixTrie,148041,111031,118.826,89.452,83611.979,1
+words_alpha,1,NaiveTrie,148041,111031,288.893,92.350,1085464.082,1
+words_alpha,1,RadixTrie,148041,111031,124.509,89.742,83611.979,1
+>>>>>>> 81ba4d9db18c06e8a3c7966cd17438b8aec53cae
