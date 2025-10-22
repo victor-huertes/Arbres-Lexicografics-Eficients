@@ -37,7 +37,7 @@ El seu funcionament consisteix en que cada aresta de l'arbre pot representar una
 	\caption{Exemple d'un Radix tree que conté les paraules "at", "ate", "bad", "bed", "beard" i "beat".}
 	\label{fig:radix_example}
 \end{figure}
-Com veurem més endavant, aquesta estructura millora significativament l'ús de memòria en comparació amb un tree naive i ternari en la majoria de casos (incloent en molt dels textos d'exemples proporcionats), però en cas pitjor tindrà un rendiment similar. (ARBOLES DENSOS)
+Com veurem més endavant, aquesta estructura millora significativament l'ús de memòria en comparació amb un tree naive i ternari en la majoria de casos (incloent en molt dels textos d'exemples proporcionats), però en cas pitjor tindrà un rendiment similar.
 
 \subsection{Patricia Trees}
 Un Patricia Tree (Practical Algorithm To Retrieve Information Coded In Alphanumeric) és una variant comprimida de Radix Tree on el nodes element es poden fusionar amb els seus pares, mantenint només aquells necessaris per diferenciar entre les paraules del conjunt.
@@ -49,7 +49,7 @@ En aquest treball només els tindrem en compte a nivell teòric, ja que consider
 
 \section{Disseny i Implementació}
 %\begin{comment} En aquest apartat cal descriure amb detall les decisions de disseny i les implementacions realitzades. Cal explicar quines estructures s’han utilitzat, com s’han representat internament i quines operacions s’han implementat (com ara inserció, cerca, autocompletat, etc.), tot destacant com s’ha garantit l’eficiència de cadascuna. També és convenient discutir les possibles alternatives que s’han considerat durant el desenvolupament, així com justificar les opcions escollides. Finalment, s’hauria d’incloure una comparació qualitativa entre les diferents implementacions desenvolupades, tot valorant-ne avantatges, limitacions i aplicabilitat en funció de l’escenari o conjunt de dades. \end{comment}
-Pel nostre projecte, hem decidit dissenyar i implementar dos dels tres tipus diferents d'estructures descrites ateriorment: un trie bàsic i un Radix Tree.
+Pel nostre projecte, hem decidit dissenyar i implementar dos dels quatre tipus diferents d'estructures descrites anteriorment: un trie bàsic/naive i un Radix Tree.
 Donada la significativa millora de rendiment teòrica d'un Radix Tree respecte a trie bàsic i el TST, hem decidit fer la seva implementació i estudiar de manera experimental el seu comportament. Cap recalcar, també, 
 que la implementació d'un TST venia amb una dificultat afegida provinent de l'ordre d'inserció de les paraules, ja que, com s'ha descrit amb anterioritat, és molt important per una millora d'eficiència significativa que sigui una estructura d'arbre balancejada. 
 En cas de fer servir una entrada amb les paraules en ordre alfabètic, com veurem en els apartats següents, el TST presentaria un clar desavantatge respecte el Radix Trie, i fins i tot, respecte la implementació Naive. 
