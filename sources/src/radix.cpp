@@ -1,11 +1,11 @@
-#include "../include/radix.h"
+#include "radix.h"
 #include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <cctype>
 
 // Constructor
-RadixTrie::RadixTrie() : root(make_unique<RadixNode>()) {}
+RadixTrie::RadixTrie() : root(make_unique<RadixNode>()) {total_nodes = 1;}
 
 // Funció auxiliar per trobar la longitud del prefix comú entre dues strings
 size_t find_common_prefix(const string &s1, const string &s2)
@@ -80,6 +80,33 @@ void RadixTrie::init(const string &text, int mode)
             line_number++;
         }
     }
+    else if (mode == 2) {
+        // Modo 2: Insertar todos los substrings de longitud 1 a 20
+        // Optimización: Convertir todo el texto a minúsculas una sola vez
+        const int MAX_SUBSTRING_LENGTH = 20;
+        
+        // Convertir a minúsculas de forma más eficiente
+        string lower_text = text;
+        for (char &c : lower_text) {
+            c = tolower(static_cast<unsigned char>(c));
+        }
+        
+        // Insertar substrings de forma incremental (construcción carácter por carácter)
+        const size_t text_len = lower_text.length();
+        for (size_t i = 0; i < text_len; ++i) {
+            // Calcular el máximo de caracteres que podemos tomar desde esta posición
+            const int max_len = min(MAX_SUBSTRING_LENGTH, static_cast<int>(text_len - i));
+            
+            // Construir substrings incrementalmente
+            string substring;
+            substring.reserve(max_len);
+            
+            for (int len = 1; len <= max_len; ++len) {
+                substring += lower_text[i + len - 1];
+                insert(substring, i);
+            }
+        }
+    }
 }
 
 // Insertar una paraula i la seva posició
@@ -104,6 +131,7 @@ void RadixTrie::insert(const string &word, int position)
             if (position != -1)
                 new_node->positions.push_back(position);
             current->children[next_char] = std::move(new_node);
+            total_nodes++;
             return;
         }
 
@@ -118,6 +146,7 @@ void RadixTrie::insert(const string &word, int position)
             // a) Crear el node SPLIT amb el prefix comú
             string common_prefix = child->label.substr(0, match_len);
             auto split_node = make_unique<RadixNode>(common_prefix);
+            total_nodes++;
 
             // b) Reconfigurar el node antic (el fill) per ser fill del node split
             string child_suffix = child->label.substr(match_len);
@@ -132,7 +161,7 @@ void RadixTrie::insert(const string &word, int position)
             new_node->is_end_of_key = true;
             if (position != -1)
                 new_node->positions.push_back(position);
-
+            total_nodes++;
             split_node->children[new_suffix[0]] = std::move(new_node);
 
             // e) Substituir l'antic fill per l'acabat de crear 'split_node'
@@ -150,6 +179,7 @@ void RadixTrie::insert(const string &word, int position)
             split_node->is_end_of_key = true;
             if (position != -1)
                 split_node->positions.push_back(position);
+            total_nodes++;
 
             // b) Reconfigurar el node antic per ser fill del node split
             string child_suffix = child->label.substr(match_len);
@@ -188,6 +218,7 @@ vector<int> RadixTrie::search_positions(const string &word) const
 
     RadixNode *current = root.get();
     string remaining_word = word;
+    last_nodes_visited = 0;
 
     while (!remaining_word.empty())
     {
@@ -208,6 +239,7 @@ vector<int> RadixTrie::search_positions(const string &word) const
             if (match_len == child->label.length())
             {
                 // Coincidència exacta amb l'etiqueta
+                last_nodes_visited++;
                 return child->is_end_of_key ? child->positions : vector<int>{};
             }
             else
@@ -223,6 +255,7 @@ vector<int> RadixTrie::search_positions(const string &word) const
             // Coincidència total de l'etiqueta, continuem
             remaining_word = remaining_word.substr(match_len);
             current = child;
+            last_nodes_visited++;
         }
         else
         {
@@ -428,6 +461,8 @@ void RadixTrie::clear()
     // Reemplaçar el unique_ptr actual amb un de nou i buit.
     // L'antic unique_ptr alliberarà automàticament tots els nodes.
     root = make_unique<RadixNode>("");
+    total_nodes = 1; // Contar la raíz
+    last_nodes_visited = 0; // Resetear contador de nodos visitados
 }
 
 // Implementació de empty()
@@ -474,4 +509,42 @@ size_t RadixTrie::calculate_node_memory(RadixNode *node) const
 size_t RadixTrie::get_memory_usage() const
 {
     return calculate_node_memory(root.get());
+}
+
+void RadixTrie::calculate_depth_metrics_recursive(const RadixNode *node, size_t current_depth,
+                                                  size_t &total_depth_sum, size_t &num_words,
+                                                  size_t &max_depth) const
+{
+    if (!node) return;
+
+    // La profundidad actual de la palabra es la profundidad previa + la longitud de la etiqueta del nodo actual
+    size_t depth_at_node_end = current_depth + node->label.length();
+
+    if (node->is_end_of_key)
+    {
+        num_words++;
+        total_depth_sum += depth_at_node_end;
+        if (depth_at_node_end > max_depth) max_depth = depth_at_node_end;
+    }
+
+    for (const auto& pair : node->children)
+    {
+        // Recursión: la nueva profundidad base es la profundidad actual (depth_at_node_end)
+        calculate_depth_metrics_recursive(pair.second.get(), depth_at_node_end, total_depth_sum, num_words, max_depth);
+    }
+}
+
+pair<size_t, double> RadixTrie::calculate_depth_metrics() const
+{
+    size_t total_depth_sum = 0;
+    size_t num_words = 0;
+    size_t max_depth = 0;
+
+    // La raíz siempre existe y comienza en profundidad 0
+    calculate_depth_metrics_recursive(root.get(), 0, total_depth_sum, num_words, max_depth);
+
+    double median_depth = (num_words > 0) ? (double)total_depth_sum / num_words : 0.0;
+
+    // Retorna (Profundidad Máxima, Profundidad Mediana)
+    return {max_depth, median_depth};
 }

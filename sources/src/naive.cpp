@@ -1,10 +1,10 @@
-#include "../include/naive.h"
+#include "naive.h"
 #include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <cctype>
 
-NaiveTrie::NaiveTrie() : root(make_unique<TrieNode>()) {}
+NaiveTrie::NaiveTrie() : root(make_unique<TrieNode>()) {total_nodes = 1;}
 
 // Inicializa el trie con un texto
 void NaiveTrie::init(const string &text, int mode)
@@ -68,6 +68,33 @@ void NaiveTrie::init(const string &text, int mode)
             line_number++;
         }
     }
+    else if (mode == 2) {
+        // Modo 2: Insertar todos los substrings de longitud 1 a 20
+        // Optimización: Convertir todo el texto a minúsculas una sola vez
+        const int MAX_SUBSTRING_LENGTH = 20;
+        
+        // Convertir a minúsculas de forma más eficiente
+        string lower_text = text;
+        for (char &c : lower_text) {
+            c = tolower(static_cast<unsigned char>(c));
+        }
+        
+        // Insertar substrings de forma incremental (construcción carácter por carácter)
+        const size_t text_len = lower_text.length();
+        for (size_t i = 0; i < text_len; ++i) {
+            // Calcular el máximo de caracteres que podemos tomar desde esta posición
+            const int max_len = min(MAX_SUBSTRING_LENGTH, static_cast<int>(text_len - i));
+            
+            // Construir substrings incrementalmente
+            string substring;
+            substring.reserve(max_len);
+            
+            for (int len = 1; len <= max_len; ++len) {
+                substring += lower_text[i + len - 1];
+                insert(substring, i);
+            }
+        }
+    }
 }
 
 // Insertar una palabra y su posición
@@ -83,6 +110,7 @@ void NaiveTrie::insert(const string &word, int position)
         if (!current->children[idx])
         {
             current->children[idx] = new TrieNode();
+            total_nodes++; // Contar el nuevo nodo
         }
         current = current->children[idx];
     }
@@ -99,6 +127,7 @@ vector<int> NaiveTrie::search_positions(const string &word) const
         return positions;
 
     TrieNode *current = root.get();
+    last_nodes_visited = 0;
 
     for (unsigned char idx : word)
     {
@@ -107,6 +136,7 @@ vector<int> NaiveTrie::search_positions(const string &word) const
             return positions;
         }
         current = current->children[idx];
+        last_nodes_visited++; // Incrementar por cada nodo visitado
     }
 
     if (!current->index.empty())
@@ -177,7 +207,7 @@ vector<pair<string, int>> NaiveTrie::autocomplete(const string &prefix) const
     }
 
     // Recolectar todas las palabras que comienzan con este prefix
-    autocomplete_aux(current, prefix, results, 5);
+    collect_words_with_positions(current, prefix, results);
 
     return results;
 }
@@ -188,8 +218,7 @@ void NaiveTrie::collect_words_with_positions(TrieNode *node, const string &prefi
     if (!node)
         return;
 
-    // Solo añadir a results si es fin de palabra
-    if (node->end_of_word && !node->index.empty())
+    if (!node->index.empty())
     {
         for (int pos : node->index)
         {
@@ -201,29 +230,8 @@ void NaiveTrie::collect_words_with_positions(TrieNode *node, const string &prefi
     {
         if (node->children[i])
         {
-            char next_char = static_cast<char>(i);
+            char next_char = static_cast<char>(i); // Ya no sumamos '0'
             collect_words_with_positions(node->children[i], prefix + next_char, results);
-        }
-    }
-}
-
-void NaiveTrie::autocomplete_aux(TrieNode *node, const string &prefix, vector<pair<string, int>> &results, int limit) const
-{
-    if (!node || results.size() >= limit)
-        return;
-
-    if (node->end_of_word && !node->index.empty())
-    {
-        // Anadimos la palabra una sola vez con su primera posición
-        results.push_back({prefix, node->index[0]});
-    }
-
-    for (size_t i = 0; i < node->children.size() && results.size() < limit; ++i)
-    {
-        if (node->children[i])
-        {
-            char next_char = static_cast<char>(i);
-            collect_words_with_positions(node->children[i], prefix + next_char, results, limit);
         }
     }
 }
@@ -231,8 +239,7 @@ void NaiveTrie::autocomplete_aux(TrieNode *node, const string &prefix, vector<pa
 // Obtener todas las palabras del trie
 vector<pair<string, int>> NaiveTrie::get_words() const
 {
-    vector<pair<string, int>> result;
-    return collect_words_with_positions(root.get(), "", result);
+    return autocomplete("");
 }
 
 void NaiveTrie::insert(const string &word)
@@ -314,11 +321,13 @@ vector<string> NaiveTrie::get_words_with_prefix(const string &prefix) const
     }
 
     TrieNode *current = root.get();
+    last_nodes_visited = 0;
 
     // Navegar fins al final del prefix
     for (unsigned char idx : prefix)
     {
         current = current->children[idx];
+        last_nodes_visited++; // Incrementar por cada nodo visitado
         if (!current)
             return results;
     }
@@ -360,6 +369,8 @@ void NaiveTrie::clear()
 {
     root = make_unique<TrieNode>();
     root->children = vector<TrieNode *>(128, nullptr);
+    total_nodes = 1; // Contar la raíz
+    last_nodes_visited = 0; // Resetear contador de nodos visitados
     root->end_of_word = false;
 }
 
@@ -394,4 +405,47 @@ size_t NaiveTrie::calculate_node_memory(TrieNode *node) const
 size_t NaiveTrie::get_memory_usage() const
 {
     return calculate_node_memory(root.get());
+}
+
+// =========================================================
+// IMPLEMENTACIÓN DE calculate_depth_metrics
+// =========================================================
+
+void NaiveTrie::calculate_depth_metrics_recursive(TrieNode *node, size_t current_depth,
+                                                  size_t &total_depth_sum, size_t &num_words,
+                                                  size_t &max_depth) const
+{
+    if (!node) return;
+
+    if (node->end_of_word)
+    {
+        num_words++;
+        total_depth_sum += current_depth;
+        if (current_depth > max_depth) max_depth = current_depth;
+    }
+
+    for (size_t i = 0; i < node->children.size(); ++i)
+    {
+        if (node->children[i])
+        {
+            // La profundidad se incrementa al bajar a un hijo
+            calculate_depth_metrics_recursive(node->children[i], current_depth + 1, total_depth_sum, num_words, max_depth);
+        }
+    }
+}
+
+pair<size_t, double> NaiveTrie::calculate_depth_metrics() const
+{
+    size_t total_depth_sum = 0;
+    size_t num_words = 0;
+    size_t max_depth = 0;
+
+    // Llamar a la función recursiva comenzando desde la raíz (profundidad 0)
+    calculate_depth_metrics_recursive(root.get(), 0, total_depth_sum, num_words, max_depth);
+
+    double median_depth = (num_words > 0) ? (double)total_depth_sum / num_words : 0.0;
+
+    // Retorna (Profundidad Máxima, Profundidad Mediana)
+    return {max_depth, median_depth};
+
 }
