@@ -35,6 +35,17 @@ private:
 
     unique_ptr<RadixNode> root;
 
+    // ============== MÈTRIQUES ESTRUCTURALS ==============
+    size_t total_nodes = 0;
+    mutable size_t last_nodes_visited = 0;
+
+    /**
+     * @brief Funció auxiliar recursiva per calcular la profunditat
+     */
+    void calculate_depth_metrics_recursive(const RadixNode *node, size_t current_depth, 
+                                           size_t &total_depth_sum, size_t &num_words, 
+                                           size_t &max_depth) const;
+
     // Funcions auxiliars privades per a recorreguts:
     void collect_words_recursive(RadixNode *node, string current_prefix, vector<pair<string, int>> &results) const;
     void collect_positions_recursive(RadixNode *node, vector<int> &positions) const;
@@ -82,6 +93,22 @@ public:
      * @return Memoria total en bytes
      */
     size_t get_memory_usage() const;
+
+    /**
+     * @brief Retorna el nombre total de nodes creats (mètrica d'espai).
+     */
+    size_t get_total_nodes() const { return total_nodes; }
+
+    /**
+     * @brief Retorna el nombre de nodes visitats en l'última operació de cerca/autocompletat.
+     */
+    size_t get_last_nodes_visited() const { return last_nodes_visited; }
+
+    /**
+     * @brief Calcula la profunditat màxima i la profunditat mediana de les paraules.
+     * @return Pair<Max_Depth, Median_Depth>
+     */
+    pair<size_t, double> calculate_depth_metrics() const;
 
 private:
     /**

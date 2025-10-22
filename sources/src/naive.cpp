@@ -1,4 +1,4 @@
-#include "naive.h"
+#include "../include/naive.h"
 #include <algorithm>
 #include <iostream>
 #include <sstream>

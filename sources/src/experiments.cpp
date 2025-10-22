@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <vector>
 #include <string>
 #include <chrono>
@@ -140,16 +141,30 @@ bool runExperiment(
         double insertTime = measureTime([&]()
                                         { structure.init(textToInsert, initMode); });
 
+        // ----------------------------------------------------
+        // NUEVAS MÉTRICAS ESTRUCTURALES
+        // ----------------------------------------------------
+        cout << "\n--- Métrica Estructural ---\n";
+        cout << "Nodos Totales Creados: " << structure.get_total_nodes() << endl;
+
+        pair<size_t, double> depth_metrics = structure.calculate_depth_metrics();
+        cout << "Profundidad Máxima:    " << depth_metrics.first << endl;
+        cout << "Profundidad Mediana:   " << fixed << setprecision(2) << depth_metrics.second << endl;
+
         // Calcular memoria del Trie
         size_t memoryBytes = structure.get_memory_usage();
         double memoryKB = memoryBytes / 1024.0;
 
         // --- Búsqueda exacta ---
         size_t found = 0;
+        size_t nodes_visited_total = 0;
         double searchTime = measureTime([&]()
                                         {
             for (const auto& w : searchWords)
-                if (structure.search_positions(w).size() != 0) found++; });
+                if (structure.search_positions(w).size() != 0) {
+                    found++;
+                    nodes_visited_total += structure.get_last_nodes_visited(); // Para medir nodos visitados
+                } });
 
         // --- Resultados ---
         cout << fixed << setprecision(3);
@@ -158,6 +173,7 @@ bool runExperiment(
         cout << "Tiempo inserción:    " << insertTime << " ms\n";
         cout << "Tiempo búsqueda:     " << searchTime << " ms\n";
         cout << "Memoria usada:       " << memoryKB << " KB\n";
+        cout << "Nodos Visitados:     " << nodes_visited_total << endl;
         
         saveToCSV(name, " ", initMode, searchWords.size(), found, insertTime, searchTime, memoryKB);
 

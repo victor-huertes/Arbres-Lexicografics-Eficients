@@ -31,6 +31,18 @@ private:
 
     unique_ptr<TrieNode> root;
 
+    // ============== MÈTRIQUES ESTRUCTURALS ==============
+    size_t total_nodes = 0;
+    // mutable es necesario para modificar en funciones const (como search)
+    mutable size_t last_nodes_visited = 0;
+
+    /**
+     * @brief Funció auxiliar recursiva per calcular la profunditat i els nodes finals
+     */
+    void calculate_depth_metrics_recursive(TrieNode *node, size_t current_depth, 
+                                           size_t &total_depth_sum, size_t &num_words, 
+                                           size_t &max_depth) const;
+
     /**
      * @brief Funció auxiliar per recollir totes les paraules amb un prefix
      * @param node Node actual
@@ -111,12 +123,11 @@ public:
      */
     vector<pair<string, int>> autocomplete(const string &prefix) const;
 
-    /*
     /**
      * @brief Obté totes les paraules del trie
      * @return Vector de parells (paraula, posició)
+     */
     vector<pair<string, int>> get_words() const;
-    */
 
     // Métodos legacy para compatibilidad con Trie base
     void insert(const string &word) override;
@@ -152,6 +163,22 @@ public:
      * @return Memoria total en bytes
      */
     size_t get_memory_usage() const;
+
+    /**
+     * @brief Retorna el nombre total de nodes creats (mètrica d'espai).
+     */
+    size_t get_total_nodes() const { return total_nodes; }
+
+    /**
+     * @brief Retorna el nombre de nodes visitats en l'última operació de cerca/autocompletat.
+     */
+    size_t get_last_nodes_visited() const { return last_nodes_visited; }
+
+    /**
+     * @brief Calcula la profunditat màxima i la profunditat mediana de les paraules.
+     * @return Pair<Max_Depth, Median_Depth>
+     */
+    pair<size_t, double> calculate_depth_metrics() const;
 
 private:
     /**
