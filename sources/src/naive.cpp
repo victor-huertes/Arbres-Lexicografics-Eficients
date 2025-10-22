@@ -177,7 +177,7 @@ vector<pair<string, int>> NaiveTrie::autocomplete(const string &prefix) const
     }
 
     // Recolectar todas las palabras que comienzan con este prefix
-    collect_words_with_positions(current, prefix, results);
+    autocomplete_aux(current, prefix, results, 5);
 
     return results;
 }
@@ -188,7 +188,8 @@ void NaiveTrie::collect_words_with_positions(TrieNode *node, const string &prefi
     if (!node)
         return;
 
-    if (!node->index.empty())
+    // Solo añadir a results si es fin de palabra
+    if (node->end_of_word && !node->index.empty())
     {
         for (int pos : node->index)
         {
@@ -200,8 +201,29 @@ void NaiveTrie::collect_words_with_positions(TrieNode *node, const string &prefi
     {
         if (node->children[i])
         {
-            char next_char = static_cast<char>(i); // Ya no sumamos '0'
+            char next_char = static_cast<char>(i);
             collect_words_with_positions(node->children[i], prefix + next_char, results);
+        }
+    }
+}
+
+void NaiveTrie::autocomplete_aux(TrieNode *node, const string &prefix, vector<pair<string, int>> &results, int limit) const
+{
+    if (!node || results.size() >= limit)
+        return;
+
+    if (node->end_of_word && !node->index.empty())
+    {
+        // Anadimos la palabra una sola vez con su primera posición
+        results.push_back({prefix, node->index[0]});
+    }
+
+    for (size_t i = 0; i < node->children.size() && results.size() < limit; ++i)
+    {
+        if (node->children[i])
+        {
+            char next_char = static_cast<char>(i);
+            collect_words_with_positions(node->children[i], prefix + next_char, results, limit);
         }
     }
 }
@@ -209,7 +231,8 @@ void NaiveTrie::collect_words_with_positions(TrieNode *node, const string &prefi
 // Obtener todas las palabras del trie
 vector<pair<string, int>> NaiveTrie::get_words() const
 {
-    return autocomplete("");
+    vector<pair<string, int>> result;
+    return collect_words_with_positions(root.get(), "", result);
 }
 
 void NaiveTrie::insert(const string &word)

@@ -69,6 +69,36 @@ void searchFromFile(NaiveTrie &trie, const string &filename)
     file.close();
 }
 
+void showAutocomplete(NaiveTrie &trie) {
+    string prefix;
+    cout << "Introduce el prefijo para autocompletar: ";
+    cin >> prefix;
+    
+    vector<pair<string, int>> suggestions = trie.autocomplete(prefix);
+    if(suggestions.empty()) {
+        cout << "No se encontraron sugerencias para '" << prefix << "'" << endl;
+        return;
+    }
+    
+    cout << "Sugerencias para '" << prefix << "':" << endl;
+    for(const auto &pair : suggestions) {
+        cout << "- " << pair.first << " (posición: " << pair.second << ")" << endl;
+    }
+}
+
+void showAllWords(NaiveTrie &trie) {
+    vector<pair<string, int>> words = trie.get_words();
+    if(words.empty()) {
+        cout << "El trie está vacío" << endl;
+        return;
+    }
+    
+    cout << "Todas las palabras en el trie:" << endl;
+    for(const auto &pair : words) {
+        cout << "- " << pair.first << " (posición: " << pair.second << ")" << endl;
+    }
+}
+
 int main()
 {
     NaiveTrie trie;
@@ -81,6 +111,8 @@ int main()
         cout << "[2] Buscar palabra" << endl;
         cout << "[3] Leer archivo de texto" << endl;
         cout << "[4] Buscar dataset" << endl;
+        cout << "[5] Autocomplete" << endl;
+        cout << "[6] All words" << endl;
         cout << "[9] Exit" << endl;
 
         int posicio = 0;
@@ -115,11 +147,18 @@ int main()
             cin >> filename;
             searchFromFile(trie, filename);
         }
+        else if (option == 5)
+        {
+            showAutocomplete(trie);
+        }
+        else if (option == 6)
+        {
+            showAllWords(trie);
+        }
         else
         {
             cout << "Opción no válida." << endl;
-            return 0;
         }
-        cout << endl;
+        cout << endl << endl;
     }
 }

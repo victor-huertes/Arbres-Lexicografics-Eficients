@@ -47,6 +47,15 @@ private:
      */
     void collect_words_with_positions(TrieNode *node, const string &prefix, vector<pair<string, int>> &results) const;
 
+        /**
+     * @brief Funció auxiliar per autocomplete, modifició de la funció anterior
+     * @param node Node actual
+     * @param prefix Prefix construït fins ara
+     * @param results Vector per emmagatzemar els resultats (paraula, posició)
+     * @param limit Límit de resultats a retornar
+     */
+    void autocomplete_aux(TrieNode *node, const string &prefix, vector<pair<string, int>> &results, int limit) const;
+
     /**
      * @brief Funció auxiliar per recollir posicions d'un subarbre
      * @param node Node actual
@@ -102,11 +111,12 @@ public:
      */
     vector<pair<string, int>> autocomplete(const string &prefix) const;
 
+    /*
     /**
      * @brief Obté totes les paraules del trie
      * @return Vector de parells (paraula, posició)
-     */
     vector<pair<string, int>> get_words() const;
+    */
 
     // Métodos legacy para compatibilidad con Trie base
     void insert(const string &word) override;
