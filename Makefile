@@ -34,6 +34,10 @@ csv:
 	@g++ -std=c++17 -Wall -O2 -o bin/experiments_csv bin/naive.o bin/radix.o bin/experiments_csv.o
 	@./bin/experiments_csv
 
+plot: 
+	@cd results && gnuplot -p scriptlog.gnuplot
+	@echo "Generados graficos con gnuplot en /results"
+
 pdf: 
 	@cd docs/latex && pdflatex -interaction=nonstopmode main.tex > /dev/null 2>&1
 	@cd docs/latex && pdflatex -interaction=nonstopmode main.tex > /dev/null 2>&1

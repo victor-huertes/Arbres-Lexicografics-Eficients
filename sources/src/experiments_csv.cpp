@@ -99,6 +99,7 @@ struct ExperimentResult {
     double tiempo_insercion_ms;
     double tiempo_busqueda_ms;
     double memoria_kb;
+    double percentage_mem;
     bool success;
 };
 
@@ -124,8 +125,10 @@ ExperimentResult runExperimentCSV(
                                         { structure.init(textToInsert, initMode); });
 
         // Memoria
+        size_t memoryString = textToInsert.size() * 8; //medida total del dataset
         size_t memoryBytes = structure.get_memory_usage();
         result.memoria_kb = memoryBytes / 1024.0;
+        result.percentage_mem = memoryBytes/memoryString * 100;
 
         // Búsqueda
         size_t found = 0;
@@ -169,7 +172,7 @@ int main()
                                         "input/dataset_busqueda_words_alpha.txt"};
 
     // Encabezado CSV
-    cout << "Dataset,Modo,Estructura,Palabras_Buscadas,Palabras_Encontradas,Tiempo_Insercion_ms,Tiempo_Busqueda_ms,Memoria_KB,Exito" << endl;
+    cout << "Dataset,Modo,Estructura,Palabras_Buscadas,Palabras_Encontradas,Tiempo_Insercion_ms,Tiempo_Busqueda_ms,Memoria_KB,Porcentaje_Memoria,Exito" << endl;
 
     // Recopilar resultados
     vector<ExperimentResult> results;
@@ -216,6 +219,7 @@ int main()
              << r.tiempo_insercion_ms << ","
              << r.tiempo_busqueda_ms << ","
              << r.memoria_kb << ","
+             << r.percentage_mem << ","
              << (r.success ? "1" : "0")
              << endl;
     }
