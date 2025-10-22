@@ -32,8 +32,7 @@ get_column(metric) = \
     (metric eq "Tiempo_Insercion_ms" ? 9 : \
     (metric eq "Tiempo_Busqueda_ms" ? 10 : \
     (metric eq "Memoria_KB" ? 11 : \
-    (metric eq "Porcentaje_Memoria" ? 12 : \
-    (metric eq "Nodos_Visitados" ? 13 : 0))))))))))
+    (metric eq "Nodos_Visitados" ? 12 : 0)))))))))
 
 # Formatear nombres de métricas
 format_metric(metric) = \
@@ -45,10 +44,9 @@ format_metric(metric) = \
     (metric eq "Tiempo_Insercion_ms" ? "Tiempo Inserción (ms)" : \
     (metric eq "Tiempo_Busqueda_ms" ? "Tiempo Búsqueda (ms)" : \
     (metric eq "Memoria_KB" ? "Memoria (KB)" : \
-    (metric eq "Porcentaje_Memoria" ? "Porcentaje Memoria" : \
-    (metric eq "Nodos_Visitados" ? "Nodos Visitados" : metric))))))))))
+    (metric eq "Nodos_Visitados" ? "Nodos Visitados" : metric)))))))))
 
-metrics = "Nodos_Totales Profundidad_Maxima Profundidad_Mediana Palabras_Buscadas Palabras_Encontradas Tiempo_Insercion_ms Tiempo_Busqueda_ms Memoria_KB Porcentaje_Memoria Nodos_Visitados"
+metrics = "Nodos_Totales Profundidad_Maxima Profundidad_Mediana Palabras_Buscadas Palabras_Encontradas Tiempo_Insercion_ms Tiempo_Busqueda_ms Memoria_KB Nodos_Visitados"
 logscale_metrics = "Nodos_Totales Palabras_Buscadas Palabras_Encontradas Tiempo_Insercion_ms Tiempo_Busqueda_ms Memoria_KB Nodos_Visitados"
 
 # Histogramas
@@ -105,9 +103,9 @@ do for [metric in metrics] {
     set ylabel metric_display
     unset logscale y
     
-    plot 'results.csv' every ::1 using 0:(stringcolumn(3) eq "NaiveTrie" ? column(col) : 1/0):xtic(format_dataset(strcol(1))) \
+    plot 'results.csv' every 2::1 using 0:col:xtic(format_dataset(strcol(1))) \
             title "NaiveTrie" lw 2 pt 7, \
-         'results.csv' every ::1 using 0:(stringcolumn(3) eq "RadixTrie" ? column(col) : 1/0) \
+         'results.csv' every 2::2 using 0:col \
             title "RadixTrie" lw 2 pt 5
     
     unset output
@@ -122,9 +120,9 @@ do for [metric in logscale_metrics] {
     set ylabel sprintf("%s (escala log)", metric_display)
     set logscale y
     
-    plot 'results.csv' every ::1 using 0:(stringcolumn(3) eq "NaiveTrie" ? column(col) : 1/0):xtic(format_dataset(strcol(1))) \
+    plot 'results.csv' every 2::1 using 0:col:xtic(format_dataset(strcol(1))) \
             title "NaiveTrie" lw 2 pt 7, \
-         'results.csv' every ::1 using 0:(stringcolumn(3) eq "RadixTrie" ? column(col) : 1/0) \
+         'results.csv' every 2::2 using 0:col \
             title "RadixTrie" lw 2 pt 5
     
     unset logscale y
@@ -171,9 +169,9 @@ set style data histograms
 set style histogram cluster gap 1
 set style fill solid border -1
 
-plot 'results.csv' every 2::1 using (column(13)/column(8)):xtic(format_dataset(strcol(1))) \
+plot 'results.csv' every 2::1 using (column(12)/column(8)):xtic(format_dataset(strcol(1))) \
         title "NaiveTrie", \
-     'results.csv' every 2::2 using (column(13)/column(8)) \
+     'results.csv' every 2::2 using (column(12)/column(8)) \
         title "RadixTrie"
 
 unset output

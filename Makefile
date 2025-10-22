@@ -34,7 +34,7 @@ csv:
 	@g++ -std=c++17 -Wall -O2 -Isources/include -c sources/src/experiments.cpp -o bin/experiments.o
 	@g++ -std=c++17 -Wall -O2 -o bin/experiments bin/naive.o bin/radix.o bin/experiments.o
 	@./bin/experiments --csv > ./output/results.csv
-	@./bin/experiments --csv > ./output/results.csv
+	@./bin/experiments --stats 5
 	@cat ./output/results.csv
 
 plot: 
@@ -60,7 +60,7 @@ help:
 	@echo "  make run   - Compila y ejecuta la interfaz de consola"
 	@echo "  make test  - Compila y ejecuta los experimentos"
 	@echo "  make csv   - Compila y ejecuta los experimentos en formato CSV"
-	@echo "  make plot  - Genera graficas con gnuplot desde output/results.csv"
+	@echo "  make plot  - Genera graficas"
 	@echo "  make pdf   - Compila el documento LaTeX"
-	@echo "  make clean - Limpia archivos temporales y graficas PNG"
+	@echo "  make clean - Limpia archivos"
 	@echo "  make help  - Muestra esta ayuda"
