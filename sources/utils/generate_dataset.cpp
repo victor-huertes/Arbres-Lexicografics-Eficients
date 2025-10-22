@@ -102,7 +102,9 @@ void generateSearchDataset(const std::string& inputFile,
 int main() {
     // Archivos base y destinos
     std::vector<std::pair<std::string, std::string>> datasets = {
-        {"lorem_ipsum.txt", "dataset_busqueda_loremipsum.txt"},
+        {"../../data/inputs/dna_genome.txt", "../../data/inputs/dna_genome_search.txt"},
+        {"../../data/inputs/moby_dick.txt", "../../data/inputs/moby_dick_search.txt"},
+        {"../../data/inputs/wikipedia_titles.txt", "../../data/inputs/wikipedia_titles_search.txt"},
     };
 
     for (auto& [input, output] : datasets) {

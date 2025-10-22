@@ -544,7 +544,7 @@ int main(int argc, char *argv[])
     print_header("PRUEBAS DE RENDIMIENTO: NAIVE TRIE vs RADIX TRIE");
 
     // Determinar archivo de entrada
-    string input_file = "input/lorem_ipsum.txt";
+    string input_file = "data/lorem_ipsum.txt";
 
     if (argc > 1)
     {

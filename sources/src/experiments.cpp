@@ -120,6 +120,100 @@ void saveToCSV(const string& datasetName,
          << searchTime << ","
          << memoryKB << "\n";
 }
+
+// ===========================================
+// ESTRUCTURA Y FUNCIÓN PARA CSV
+// ===========================================
+
+struct ExperimentResult {
+    string dataset;
+    int mode;
+    string structure;
+    size_t nodos_totales;
+    size_t profundidad_maxima;
+    double profundidad_mediana;
+    size_t palabras_buscadas;
+    size_t palabras_encontradas;
+    double tiempo_insercion_ms;
+    double tiempo_busqueda_ms;
+    double memoria_kb;
+    double percentage_mem;
+    size_t nodos_visitados;
+    bool success;
+};
+
+template <typename Structure>
+ExperimentResult runExperimentCSV(
+    const string &structureName,
+    const string &datasetName,
+    Structure &structure,
+    const string &textToInsert,
+    const vector<string> &searchWords,
+    int initMode = 0)
+{
+    ExperimentResult result;
+    result.dataset = datasetName;
+    result.mode = initMode;
+    result.structure = structureName;
+    result.palabras_buscadas = searchWords.size();
+    result.success = false;
+
+    try {
+        // Inicialización
+        result.tiempo_insercion_ms = measureTime([&]()
+                                        { structure.init(textToInsert, initMode); });
+
+        // Métricas estructurales
+        result.nodos_totales = structure.get_total_nodes();
+        pair<size_t, double> depth_metrics = structure.calculate_depth_metrics();
+        result.profundidad_maxima = depth_metrics.first;
+        result.profundidad_mediana = depth_metrics.second;
+
+        // Memoria
+        size_t memoryString = textToInsert.size() * 8; //medida total del dataset
+        size_t memoryBytes = structure.get_memory_usage();
+        result.memoria_kb = memoryBytes / 1024.0;
+        result.percentage_mem = memoryBytes/memoryString * 100;
+
+        // Búsqueda
+        size_t found = 0;
+        size_t nodes_visited_total = 0;
+        result.tiempo_busqueda_ms = measureTime([&]()
+                                        {
+            for (const auto& w : searchWords) {
+                if (structure.search_positions(w).size() != 0) {
+                    found++;
+                    nodes_visited_total += structure.get_last_nodes_visited();
+                }
+            } });
+
+        result.palabras_encontradas = found;
+        result.nodos_visitados = nodes_visited_total;
+        result.success = true;
+    }
+    catch (const std::bad_alloc& e) {
+        result.palabras_encontradas = 0;
+        result.tiempo_insercion_ms = 0;
+        result.tiempo_busqueda_ms = 0;
+        result.memoria_kb = 0;
+        result.nodos_totales = 0;
+        result.profundidad_maxima = 0;
+        result.profundidad_mediana = 0;
+        result.nodos_visitados = 0;
+    }
+    catch (...) {
+        result.palabras_encontradas = 0;
+        result.tiempo_insercion_ms = 0;
+        result.tiempo_busqueda_ms = 0;
+        result.memoria_kb = 0;
+        result.nodos_totales = 0;
+        result.profundidad_maxima = 0;
+        result.profundidad_mediana = 0;
+        result.nodos_visitados = 0;
+    }
+
+    return result;
+}
 // ===========================================
 // EXPERIMENTO GENERAL
 // ===========================================
@@ -200,8 +294,14 @@ bool runExperiment(
 // MAIN
 // ===========================================
 
-int main()
+int main(int argc, char* argv[])
 {
+    // Verificar si se debe usar formato CSV
+    bool useCSV = false;
+    if (argc > 1 && string(argv[1]) == "--csv") {
+        useCSV = true;
+    }
+
     // Rutas a tus datasets
     // Assuming the project structure:
     // project_root/
@@ -211,50 +311,126 @@ int main()
     //   │   └── main/
     //   │       ├── Alice_in_Wonderland.txt
     //   │       └── dataset_busqueda_Alice.txt
-    vector<string> insertDatasetPath = {"input/lorem_ipsum.txt",
-                                        "input/bee_movie_script.txt",
-                                        "input/Alice_in_Wonderland.txt",
-                                        "input/words_alpha.txt"};
-    vector<string> searchDatasetPath = {"input/dataset_busqueda_loremipsum.txt",
-                                        "input/dataset_busqueda_bee_movie.txt",
-                                        "input/dataset_busqueda_Alice.txt",
-                                        "input/dataset_busqueda_words_alpha.txt"};
+    vector<string> insertDatasetPath = {
+        "data/lorem_ipsum.txt",
+        "data/bee_movie.txt",
+        "data/alice_wonderland.txt",
+        "data/moby_dick.txt",
+        "data/words_alpha.txt",
+        "data/dna_genome.txt"
+        "data/wikipedia_titles.txt"
+    };
+    vector<string> searchDatasetPath = {
+        "data/lorem_ipsum_search.txt",
+        "data/bee_movie_search.txt",
+        "data/alice_wonderland_search.txt",
+        "data/moby_dick_search.txt",
+        "data/words_alpha_search.txt",
+        "data/dna_genome_search.txt"
+        "data/wikipedia_titles_search.txt"
+    };
 
-    // Cargar datasets
-    for (size_t i = 0; i < insertDatasetPath.size(); ++i)
-    {        
-        string dataset_name = insertDatasetPath[i].substr(insertDatasetPath[i].find_last_of("/") + 1);
-        // Cargar el texto completo para inserción
-        string textToInsert = loadTextFile(insertDatasetPath[i]);
+    if (useCSV) {
+        // ===============================================
+        // MODO CSV: Salida en formato CSV
+        // ===============================================
         
-        // Cargar palabras para búsqueda
-        vector<string> searchWords = loadDataset(searchDatasetPath[i]);
+        // Encabezado CSV
+        cout << "Dataset,Modo,Estructura,Nodos_Totales,Profundidad_Maxima,Profundidad_Mediana,Palabras_Buscadas,Palabras_Encontradas,Tiempo_Insercion_ms,Tiempo_Busqueda_ms,Memoria_KB,Porcentaje_Memoria,Nodos_Visitados,Exito" << endl;
 
-        cout << "DATASET: " << insertDatasetPath[i] << endl;
+        // Recopilar resultados
+        vector<ExperimentResult> results;
+
+        for (size_t i = 0; i < insertDatasetPath.size(); ++i)
+        {
+            string textToInsert = loadTextFile(insertDatasetPath[i]);
+            vector<string> searchWords = loadDataset(searchDatasetPath[i]);
+            
+            // Extraer nombre del dataset (sin ruta y extensión)
+            string datasetName = insertDatasetPath[i];
+            size_t lastSlash = datasetName.find_last_of("/\\");
+            if (lastSlash != string::npos) {
+                datasetName = datasetName.substr(lastSlash + 1);
+            }
+            size_t dotPos = datasetName.find_last_of(".");
+            if (dotPos != string::npos) {
+                datasetName = datasetName.substr(0, dotPos);
+            }
+
+            // Determinar modo: wikipedia usa modo 1, el resto modo 0
+            int mode = (datasetName == "wikipedia_titles") ? 1 : 0;
+
+            NaiveTrie trie;
+            RadixTrie radix;
+            
+            results.push_back(runExperimentCSV("NaiveTrie", datasetName, trie, textToInsert, searchWords, mode));
+            results.push_back(runExperimentCSV("RadixTrie", datasetName, radix, textToInsert, searchWords, mode));
+        }
+
+        // Imprimir resultados en formato CSV
+        cout << fixed << setprecision(3);
+        for (const auto& r : results) {
+            cout << r.dataset << ","
+                 << r.mode << ","
+                 << r.structure << ","
+                 << r.nodos_totales << ","
+                 << r.profundidad_maxima << ","
+                 << r.profundidad_mediana << ","
+                 << r.palabras_buscadas << ","
+                 << r.palabras_encontradas << ","
+                 << r.tiempo_insercion_ms << ","
+                 << r.tiempo_busqueda_ms << ","
+                 << r.memoria_kb << ","
+                 << r.percentage_mem << ","
+                 << r.nodos_visitados << ","
+                 << (r.success ? "1" : "0");
+        }
+    }
+    else {
+        // ===============================================
+        // MODO NORMAL: Salida detallada
+        // ===============================================
         
-        // Modo 0: Insertar palabras con posición en el texto
-        cout << "\n=== MODO 0: Palabras con posición en texto ===" << endl;
-        
-        // Crear estructuras
-        NaiveTrie trie_mode0;
-        RadixTrie radix_mode0;
+        // Cargar datasets
+        for (size_t i = 0; i < insertDatasetPath.size(); ++i)
+        {        
+            string dataset_name = insertDatasetPath[i].substr(insertDatasetPath[i].find_last_of("/") + 1);
+            // Cargar el texto completo para inserción
+            string textToInsert = loadTextFile(insertDatasetPath[i]);
+            
+            // Cargar palabras para búsqueda
+            vector<string> searchWords = loadDataset(searchDatasetPath[i]);
 
-        // Ejecutar experimentos con modo 0
-        runExperiment("Naive Trie (Modo 0)", trie_mode0, textToInsert, searchWords, 0);
-        runExperiment("Radix Tree (Modo 0)", radix_mode0, textToInsert, searchWords, 0);
+            cout << "DATASET: " << insertDatasetPath[i] << endl;
+            
+            // Extraer nombre del dataset (sin ruta y extensión)
+            string datasetName = insertDatasetPath[i];
+            size_t lastSlash = datasetName.find_last_of("/\\");
+            if (lastSlash != string::npos) {
+                datasetName = datasetName.substr(lastSlash + 1);
+            }
+            size_t dotPos = datasetName.find_last_of(".");
+            if (dotPos != string::npos) {
+                datasetName = datasetName.substr(0, dotPos);
+            }
 
-        // Modo 1: Insertar palabras con número de línea
-        cout << "\n=== MODO 1: Palabras con número de línea ===" << endl;
-        
-        // Crear estructuras
-        NaiveTrie trie_mode1;
-        RadixTrie radix_mode1;
+            // Determinar modo: wikipedia usa modo 1, el resto modo 0
+            int mode = (datasetName == "wikipedia_titles") ? 1 : 0;
+            
+            cout << "\n=== MODO " << mode << ": " 
+                 << (mode == 0 ? "Palabras con posición en texto" : "Palabras con número de línea") 
+                 << " ===" << endl;
+            
+            // Crear estructuras
+            NaiveTrie trie;
+            RadixTrie radix;
 
-        // Ejecutar experimentos con modo 1
-        runExperiment("Naive Trie (Modo 1)", trie_mode1, textToInsert, searchWords, 1);
-        runExperiment("Radix Tree (Modo 1)", radix_mode1, textToInsert, searchWords, 1);
+            // Ejecutar experimentos con el modo correspondiente
+            runExperiment("Naive Trie", trie, textToInsert, searchWords, mode);
+            runExperiment("Radix Tree", radix, textToInsert, searchWords, mode);
 
-        cout << endl;
+            cout << endl;
+        }
     }
     return 0;
 }

@@ -24,19 +24,22 @@ test:
 	@g++ -std=c++17 -Wall -O2 -Isources/include -c sources/src/radix.cpp -o bin/radix.o
 	@g++ -std=c++17 -Wall -O2 -Isources/include -c sources/src/experiments.cpp -o bin/experiments.o
 	@g++ -std=c++17 -Wall -O2 -o bin/experiments bin/naive.o bin/radix.o bin/experiments.o
-	@./bin/experiments
+	@./bin/experiments > ./output/results.txt
+	@cat ./output/results.txt
 
 csv:
 	@mkdir -p bin
 	@g++ -std=c++17 -Wall -O2 -Isources/include -c sources/src/naive.cpp -o bin/naive.o
 	@g++ -std=c++17 -Wall -O2 -Isources/include -c sources/src/radix.cpp -o bin/radix.o
-	@g++ -std=c++17 -Wall -O2 -Isources/include -c sources/src/experiments_csv.cpp -o bin/experiments_csv.o
-	@g++ -std=c++17 -Wall -O2 -o bin/experiments_csv bin/naive.o bin/radix.o bin/experiments_csv.o
-	@./bin/experiments_csv
+	@g++ -std=c++17 -Wall -O2 -Isources/include -c sources/src/experiments.cpp -o bin/experiments.o
+	@g++ -std=c++17 -Wall -O2 -o bin/experiments bin/naive.o bin/radix.o bin/experiments.o
+	@./bin/experiments --csv > ./output/results.csv
+	@cat ./output/results.csv
 
 plot: 
-	@cd results && gnuplot -p scriptlog.gnuplot
-	@echo "Generados graficos con gnuplot en /results"
+	@cd output && gnuplot -p ../sources/utils/script.gnuplot
+	@cd output && gnuplot -p ../sources/utils/scriptlog.gnuplot
+	@echo "Generados graficos con gnuplot en /output"
 
 pdf: 
 	@cd docs/latex && pdflatex -interaction=nonstopmode main.tex > /dev/null 2>&1
@@ -44,8 +47,9 @@ pdf:
 	@echo "PDF generado en docs/latex/main.pdf"
 
 clean:
-	@rm -rf bin/*.o bin/trie_demo bin/experiments bin/experiments_csv
+	@rm -rf bin/*.o bin/trie_demo bin/experiments
 	@rm -f docs/latex/*.aux docs/latex/*.log docs/latex/*.out docs/latex/*.toc docs/latex/*.fls docs/latex/*.fdb_latexmk docs/latex/*.synctex.gz
+	@rm -f output/*
 	@echo "Archivos temporales eliminados"
 
 help:
@@ -56,6 +60,7 @@ help:
 	@echo "  make run   - Compila y ejecuta la interfaz de consola"
 	@echo "  make test  - Compila y ejecuta los experimentos"
 	@echo "  make csv   - Compila y ejecuta los experimentos en formato CSV"
+	@echo "  make plot  - Genera graficas con gnuplot desde output/results.csv"
 	@echo "  make pdf   - Compila el documento LaTeX"
-	@echo "  make clean - Limpia archivos temporales"
+	@echo "  make clean - Limpia archivos temporales y graficas PNG"
 	@echo "  make help  - Muestra esta ayuda"

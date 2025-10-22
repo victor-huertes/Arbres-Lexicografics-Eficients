@@ -211,6 +211,16 @@ coverage/
 *.lcov
 
 # ==========================================
+#              FITXERS DE DADES GRANS
+# ==========================================
+
+# Fitxers de dades grans que excedeixen els límits de GitHub
+data/dna_genome.txt
+data/dna_genome_search.txt
+data/wikipedia_titles.txt
+data/wikipedia_titles_search.txt
+
+# ==========================================
 #              PACKAGES I DEPENDENCIES
 # ==========================================
 
