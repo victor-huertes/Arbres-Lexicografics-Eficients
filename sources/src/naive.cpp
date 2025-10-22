@@ -6,6 +6,31 @@
 
 NaiveTrie::NaiveTrie() : root(make_unique<TrieNode>()) {total_nodes = 1;}
 
+NaiveTrie::~NaiveTrie() {
+    // Liberar todos los nodos hijos del root antes de que unique_ptr lo destruya
+    if (root) {
+        for (auto child : root->children) {
+            if (child) {
+                delete_subtree(child);
+            }
+        }
+    }
+}
+
+void NaiveTrie::delete_subtree(TrieNode *node) {
+    if (!node) return;
+    
+    // Recursivamente eliminar todos los hijos
+    for (auto child : node->children) {
+        if (child) {
+            delete_subtree(child);
+        }
+    }
+    
+    // Eliminar el nodo actual
+    delete node;
+}
+
 // Inicializa el trie con un texto
 void NaiveTrie::init(const string &text, int mode)
 {
@@ -367,6 +392,16 @@ bool NaiveTrie::empty() const
 
 void NaiveTrie::clear()
 {
+    // Liberar todos los nodos hijos existentes antes de resetear
+    if (root) {
+        for (auto child : root->children) {
+            if (child) {
+                delete_subtree(child);
+            }
+        }
+    }
+    
+    // Crear nuevo root
     root = make_unique<TrieNode>();
     root->children = vector<TrieNode *>(128, nullptr);
     total_nodes = 1; // Contar la raíz

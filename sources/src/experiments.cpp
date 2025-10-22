@@ -322,24 +322,35 @@ ExperimentResultWithStats runMultipleExperiments(
     int successful_runs = 0;
     
     for (int i = 0; i < numRuns; ++i) {
-        Structure structure;  // Crear nueva instancia para cada corrida
-        ExperimentResult result = runExperimentCSV(
-            structureName, datasetName, structure, textToInsert, searchWords, initMode
-        );
+        cerr << "  Corrida " << (i+1) << "/" << numRuns << " - " << structureName 
+             << " - " << datasetName << "..." << endl;
         
-        if (result.success) {
-            successful_runs++;
-            nodos_totales_vec.push_back(static_cast<double>(result.nodos_totales));
-            profundidad_maxima_vec.push_back(static_cast<double>(result.profundidad_maxima));
-            profundidad_mediana_vec.push_back(result.profundidad_mediana);
-            palabras_buscadas_vec.push_back(static_cast<double>(result.palabras_buscadas));
-            palabras_encontradas_vec.push_back(static_cast<double>(result.palabras_encontradas));
-            tiempo_insercion_vec.push_back(result.tiempo_insercion_ms);
-            tiempo_busqueda_vec.push_back(result.tiempo_busqueda_ms);
-            memoria_vec.push_back(result.memoria_kb);
-            percentage_mem_vec.push_back(result.percentage_mem);
-            nodos_visitados_vec.push_back(static_cast<double>(result.nodos_visitados));
+        {  // Bloque de scope para forzar destrucción inmediata
+            Structure structure;  // Crear nueva instancia para cada corrida
+            ExperimentResult result = runExperimentCSV(
+                structureName, datasetName, structure, textToInsert, searchWords, initMode
+            );
+            
+            if (result.success) {
+                successful_runs++;
+                nodos_totales_vec.push_back(static_cast<double>(result.nodos_totales));
+                profundidad_maxima_vec.push_back(static_cast<double>(result.profundidad_maxima));
+                profundidad_mediana_vec.push_back(result.profundidad_mediana);
+                palabras_buscadas_vec.push_back(static_cast<double>(result.palabras_buscadas));
+                palabras_encontradas_vec.push_back(static_cast<double>(result.palabras_encontradas));
+                tiempo_insercion_vec.push_back(result.tiempo_insercion_ms);
+                tiempo_busqueda_vec.push_back(result.tiempo_busqueda_ms);
+                memoria_vec.push_back(result.memoria_kb);
+                percentage_mem_vec.push_back(result.percentage_mem);
+                nodos_visitados_vec.push_back(static_cast<double>(result.nodos_visitados));
+            }
+            // 'structure' se destruye aquí al salir del scope
         }
+        
+        // Pequeña pausa para permitir que el sistema libere memoria
+        #ifndef _WIN32
+        usleep(100000);  // 100ms de pausa
+        #endif
     }
     
     if (successful_runs > 0) {
@@ -547,8 +558,8 @@ int main(int argc, char* argv[])
         "data/alice_wonderland.txt",
         "data/moby_dick.txt",
         "data/words_alpha.txt",
-        "data/dna_genome.txt"
-        // "data/wikipedia_titles.txt"
+        "data/dna_genome.txt",
+        "data/wikipedia_titles.txt"
     };
     vector<string> searchDatasetPath = {
         "data/lorem_ipsum_search.txt",
@@ -556,8 +567,8 @@ int main(int argc, char* argv[])
         "data/alice_wonderland_search.txt",
         "data/moby_dick_search.txt",
         "data/words_alpha_search.txt",
-        "data/dna_genome_search.txt"
-        // "data/wikipedia_titles_search.txt"
+        "data/dna_genome_search.txt",
+        "data/wikipedia_titles_search.txt"
     };
 
     if (useCSV) {
@@ -590,11 +601,35 @@ int main(int argc, char* argv[])
             // Determinar modo: wikipedia usa modo 1, el resto modo 0
             int mode = (datasetName == "wikipedia_titles") ? 1 : 0;
 
-            NaiveTrie trie;
-            RadixTrie radix;
+            cerr << "Procesando dataset: " << datasetName << " (modo " << mode << ")..." << endl;
             
-            results.push_back(runExperimentCSV("NaiveTrie", datasetName, trie, textToInsert, searchWords, mode));
-            results.push_back(runExperimentCSV("RadixTrie", datasetName, radix, textToInsert, searchWords, mode));
+            // Ejecutar NaiveTrie en un scope separado para liberar memoria inmediatamente
+            {
+                cerr << "  - Ejecutando NaiveTrie..." << endl;
+                NaiveTrie trie;
+                results.push_back(runExperimentCSV("NaiveTrie", datasetName, trie, textToInsert, searchWords, mode));
+                // trie se destruye aquí
+            }
+            
+            // Pequeña pausa para permitir liberación de memoria
+            #ifndef _WIN32
+            usleep(50000);  // 50ms
+            #endif
+            
+            // Ejecutar RadixTrie en un scope separado
+            {
+                cerr << "  - Ejecutando RadixTrie..." << endl;
+                RadixTrie radix;
+                results.push_back(runExperimentCSV("RadixTrie", datasetName, radix, textToInsert, searchWords, mode));
+                // radix se destruye aquí
+            }
+            
+            // Pausa entre datasets
+            #ifndef _WIN32
+            usleep(50000);  // 50ms
+            #endif
+            
+            cerr << "  ✓ Completado" << endl << endl;
         }
 
         // Imprimir resultados en formato CSV

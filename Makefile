@@ -34,6 +34,7 @@ csv:
 	@g++ -std=c++17 -Wall -O2 -Isources/include -c sources/src/experiments.cpp -o bin/experiments.o
 	@g++ -std=c++17 -Wall -O2 -o bin/experiments bin/naive.o bin/radix.o bin/experiments.o
 	@./bin/experiments --csv > ./output/results.csv
+	@./bin/experiments --csv > ./output/results.csv
 	@cat ./output/results.csv
 
 plot: 

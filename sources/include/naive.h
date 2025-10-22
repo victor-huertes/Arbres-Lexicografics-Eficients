@@ -75,6 +75,12 @@ private:
      */
     void collect_positions_from_subtree(TrieNode *node, vector<int> &positions) const;
 
+    /**
+     * @brief Funció auxiliar per alliberar recursivament un subarbre
+     * @param node Node a alliberar
+     */
+    void delete_subtree(TrieNode *node);
+
 public:
     /**
      * @brief Constructor del NaiveTrie
@@ -84,7 +90,7 @@ public:
     /**
      * @brief Destructor del NaiveTrie
      */
-    ~NaiveTrie() = default;
+    ~NaiveTrie();
 
     /**
      * @brief Inicialitza el trie amb un text
