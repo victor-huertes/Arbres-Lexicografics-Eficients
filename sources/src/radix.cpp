@@ -1,4 +1,4 @@
-#include "../include/radix.h"
+#include "radix.h"
 #include <algorithm>
 #include <iostream>
 #include <sstream>
@@ -239,7 +239,6 @@ vector<int> RadixTrie::search_positions(const string &word) const
             if (match_len == child->label.length())
             {
                 // Coincidència exacta amb l'etiqueta
-                last_nodes_visited++;
                 return child->is_end_of_key ? child->positions : vector<int>{};
             }
             else
@@ -255,7 +254,6 @@ vector<int> RadixTrie::search_positions(const string &word) const
             // Coincidència total de l'etiqueta, continuem
             remaining_word = remaining_word.substr(match_len);
             current = child;
-            last_nodes_visited++;
         }
         else
         {
@@ -518,7 +516,7 @@ void RadixTrie::calculate_depth_metrics_recursive(const RadixNode *node, size_t 
     if (!node) return;
 
     // La profundidad actual de la palabra es la profundidad previa + la longitud de la etiqueta del nodo actual
-    size_t depth_at_node_end = current_depth + node->label.length();
+    size_t depth_at_node_end = current_depth + 1;
 
     if (node->is_end_of_key)
     {
