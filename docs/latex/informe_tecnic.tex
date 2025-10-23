@@ -62,6 +62,46 @@ Notem que el rendiment d'aquesta estructura depen directament de la profunditat 
 
 En general, l'ús d'un TST sol ser el mateix que el d'un Trie estandard, però obtindrem el pitjor rendiment a un TST treballant amb cadenes ordenades, ja que la millor manera que tindrem de garantir un bon rendiment sera tenint un arbre balancejat. 
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  level distance=1.1cm,
+  sibling distance=2.0cm
+]
+\node[mynode]{b}
+  child {node[mynode]{a}
+	[sibling distance=3.0cm]
+    child {node[mynode]{t$_1$}
+        child {node[mynode]{e$_2$}}
+    }
+  }
+  child {node[mynode]{e}
+  	[sibling distance=1.0cm]
+    child {node[mynode]{a}
+      child {node[mynode]{d$_3$}}
+    }
+	child{node[mynode]{a}
+		child {node[mynode]{r}
+			child[missing]{}
+        	child {node[mynode]{d$_5$}}
+        	child {node[mynode]{t$_6$}}
+      }
+	}
+	child[missing]{}
+  }
+  child{node[mynode]{c}
+	child{node[mynode]{r}
+		child{node[mynode]{y$_4$}}
+	}
+  }
+;
+
+\end{tikzpicture}
+\caption{Exemple d'un TST que conté les paraules ``at'', ``ate'', ``bad'', ``cry'', ``beard'' i ``beat''.}
+\label{fig:tst}
+\end{figure}
+
+
 \subsection{Radix Tries}
 Un Radix Tree és una altra variant de trie bàsic que busca estalviar espai en la memòria. L'idea principal d'aquesta estructura és comprimir els nodes que tenen un sol fill per així aconseguir reduir la profunditat de l'arbre i, per tant, el nombre de nodes necessaris per representar un conjunt de paraules.
 El seu funcionament consisteix en que cada aresta de l'arbre pot representar una cadena de caràcters en lloc d'un sol caràcter. Això significa que els nodes es poden fusionar entre si per només haver de tenir un que representa la cadena completa. Per exemple, representant el mateix conjunt de paraules \{``at'', ``ate'', ``bad'', ``bed'', ``beard'', ``beat''\} amb un Radix Tree, tindríem la següent estructura:
