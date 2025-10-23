@@ -20,24 +20,24 @@ Cada node en una trie està associat a un caràcter de l'alfabet, menys el node 
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}[
-  level distance=1.4cm,
-  sibling distance=2.2cm
+  level distance=1.1cm,
+  sibling distance=2.0cm
 ]
 \node[mynode]{root}
   child {node[mynode]{a}
-    child {node[mynode]{t}
-      child {node[mynode]{e}}
+    child {node[mynode]{t$_1$}
+      child {node[mynode]{e$_2$}}
     }
   }
   child {node[mynode]{b}
 	child{node[mynode]{a}
-		child{node[mynode]{d}}}
+		child{node[mynode]{d$_3$}}}
     child {node[mynode]{e}
       child {node[mynode]{a}
 	  	child {node[mynode]{r}
-			child {node[mynode]{d}}
+			child {node[mynode]{d$_4$}}
 		}
-		child{node[mynode]{t}}
+		child{node[mynode]{t$_5$}}
 	  }
     }
   };
@@ -74,14 +74,14 @@ El seu funcionament consisteix en que cada aresta de l'arbre pot representar una
   sibling distance=2.2cm
 ]
 \node[mynode]{root}
-  child {node[mynode]{at}
-    child {node[mynode]{e}}
+  child {node[mynode]{at$_1$}
+    child {node[mynode]{e$_2$}}
   }
   child {node[mynode]{b}
-	child{node[mynode]{ad}}
+	child{node[mynode]{ad$_3$}}
     child{node[mynode]{ea}
-	  	child {node[mynode]{rd}}
-		child{node[mynode]{t}}
+	  	child {node[mynode]{rd$_4$}}
+		child{node[mynode]{t$_5$}}
     }
   };
 \end{tikzpicture}
