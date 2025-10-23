@@ -1,0 +1,55 @@
+LIBRERÍAS NECESARIAS PARA "make pdf"
+=====================================
+
+Para compilar el PDF con el comando "make pdf", necesitas tener instalado:
+
+1. SISTEMA BASE:
+   - texlive-base (pdflatex y utilidades básicas)
+   - texlive-latex-base
+
+2. PAQUETES LATEX UTILIZADOS EN EL PROYECTO:
+
+   Paquetes incluidos en main.tex:
+   - inputenc (utf8) - Codificación de entrada
+   - babel (spanish, catalan) - Soporte multiidioma
+   - hyperref - Enlaces e hipervínculos
+   - geometry - Configuración de márgenes
+   - xspace - Gestión de espacios
+   - graphicx - Inclusión de imágenes
+   - float - Control de posicionamiento de floats
+   - amsmath - Matemáticas avanzadas
+   - url - Formateo de URLs
+   - cite - Gestión de citas bibliográficas
+   - tikz - Gráficos vectoriales
+   - forest - Diagramas de árboles
+
+3. DISTRIBUCIONES RECOMENDADAS POR SISTEMA OPERATIVO:
+
+   Ubuntu/Debian:
+   sudo apt-get install texlive-latex-base texlive-latex-extra texlive-lang-spanish
+
+   Fedora/RHEL:
+   sudo dnf install texlive-scheme-basic texlive-collection-latexextra texlive-collection-langspanish
+
+   Arch Linux:
+   sudo pacman -S texlive-core texlive-latexextra texlive-langextra
+
+   macOS (con Homebrew):
+   brew install --cask mactex
+
+   Windows:
+   Instalar MiKTeX o TeX Live desde sus sitios oficiales
+
+4. INSTALACIÓN COMPLETA (RECOMENDADO):
+   
+   Para evitar problemas de dependencias, se recomienda instalar:
+   - texlive-full (Ubuntu/Debian) - incluye todos los paquetes
+   - texlive-scheme-full (Fedora/RHEL)
+
+5. VERIFICACIÓN:
+   
+   Para verificar que pdflatex está instalado:
+   pdflatex --version
+
+NOTA: El Makefile ejecuta el comando:
+cd docs/latex && pdflatex -interaction=nonstopmode main.tex > /dev/null
