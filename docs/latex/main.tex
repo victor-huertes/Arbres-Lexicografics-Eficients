@@ -26,9 +26,9 @@
 %
 \begin{tabular}{cc}
 {\textsc{Laura Moreno Valencia}} & {\textsc{Víctor Huertes Montes}} \\
-\normalsize \texttt{laura.christel.moreno@estudiant.upc.edu} & \normalsize \texttt{victor.huertes@estudiant.upc.edu} \\[4mm]
+\normalsize \texttt{laura.christel.moreno@estudiantat.upc.edu} & \normalsize \texttt{victor.huertes@estudiantat.upc.edu} \\[4mm]
 {\textsc{Abraham Ruiz Vasquez}} & {\textsc{Pol Riveiro Clarà}} \\
-\normalsize \texttt{abraham.ruiz.vasquez@estudiant.upc.edu} & \normalsize \texttt{pol.riveiro@estudiant.upc.edu} \\
+\normalsize \texttt{abraham.ruiz.vasquez@estudiantat.upc.edu} & \normalsize \texttt{pol.riveiro@estudiantat.upc.edu} \\
 \end{tabular}
 }
 \date{}
@@ -38,9 +38,11 @@
 \maketitle
 
 \begin{abstract}
-Aquest és el resum del vostre treball. Aquí cal escriure una síntesi breu que expliqui de manera clara en què consisteix el projecte, quins són els seus objectius, la metodologia emprada i els principals resultats obtinguts.
-El document ha de tenir una extensió màxima de 10 pàgines, sense comptar la bibliografia ni els apèndixs (aquests últims són opcionals). Tan important és redactar un bon informe tècnic com elaborar un informe d’autoaprenentatge que reflecteixi el procés seguit, les decisions preses i les dificultats superades.
-Aquesta plantilla és només una proposta d’organització del document. Podeu adaptar-ne l’estructura segons les necessitats específiques del vostre projecte.
+Aquest projecte explora el disseny, implementació i evaluació experimental de les estructures d'arbres lexicogràfics per emmagatzematge i cerca de cadenes de text Especificament, comparem el Naive Trie i el Radix Tree, analitzant les seves diferències en ús de memòria,
+compactesa i rendiment de cerca. L'objectiu principa és entendre com la compressió de prefixos comuns en arbres lexicogràfics por millorar l'eficiència espacial i temporal en les aplicacions de processat de text. 
+
+Per aconseguir això, les dues estructures de dades han estat implementades en C++ i testejades en multiples datasets amb característiques variades. Els experiments han mesurat ús total de memòria, nombre de nodes, distribució de profunditat i temps mig de cerca. 
+Els resultats confirmen les espectacions teòriques: el Radix Tree aconsegueix una redució de memòria de més del 90\% en alguns casos comparat amb el Naive Tree, mantenint temps d'inserció i cerca competitius. Tot i això, el rendiment varia depenent de la redundància dels prefixos dintre de cada dataset. 
 \end{abstract} \newpage
 
 \input{informe_tecnic} \newpage

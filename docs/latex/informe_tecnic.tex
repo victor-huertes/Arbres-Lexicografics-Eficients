@@ -102,7 +102,7 @@ En general, l'ús d'un TST sol ser el mateix que el d'un Trie estandard, però o
 \end{figure}
 
 
-\subsection{Radix Tries}
+\subsection{Radix Trees}
 Un Radix Tree és una altra variant de trie bàsic que busca estalviar espai en la memòria. L'idea principal d'aquesta estructura és comprimir els nodes que tenen un sol fill per així aconseguir reduir la profunditat de l'arbre i, per tant, el nombre de nodes necessaris per representar un conjunt de paraules.
 El seu funcionament consisteix en que cada aresta de l'arbre pot representar una cadena de caràcters en lloc d'un sol caràcter. Això significa que els nodes es poden fusionar entre si per només haver de tenir un que representa la cadena completa. Per exemple, representant el mateix conjunt de paraules \{``at'', ``ate'', ``bad'', ``bed'', ``beard'', ``beat''\} amb un Radix Tree, tindríem la següent estructura:
 
@@ -183,10 +183,31 @@ Per cada fitxer que hem inserit als arbres lexicogràfics hem generat una sèrie
 \subsection{Resultats}
 Els resultats de la nostra investigació han estat força consistents amb les hipòtesis teòriques que ens haviem suposat. El Radix Tree ha demostrat ser molt superior en termes de memòria, encara que no presenta unes millores significativament altes en temps de cerca ni inserció. 
 
+\subsection{Eficiència Espacial}
+El Radix Tree demostra una superioritat clara en termes d'ús de memòria. En datasets com \texttt{moby\_dick}, el Radix Tree ocupa aproximadament 4.96 MB front als 51.86 MB del Naive Trie (una reducció del 90.4\%). Aquesta diferència s'accentua encara més en datasets amb moltes paraules úniques: per \texttt{words\_alpha}, el Radix utilitza 83.61 MB mentre que el Naive requereix 1.08 GB, obtenint una compressió del 92.3\%. En casos extrems com \texttt{dna\_genome}, la millora arriba al 99.3\% (75.35 MB vs 10.36 GB). Aquestes dades confirmen que la compressió de prefixos comuns del Radix Tree és altament efectiva en entorns amb recursos limitats.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\textwidth]{figures/plot_histogram_log_Memoria_KB.png}
-	\caption{}
+	\caption{Representació en escala logarítmica de l'ús de memoria en KB per cada dataset i tipus de trie}
+	\label{fig:radix_example}
+\end{figure}
+
+
+\subsection{Eficiència Temporal}
+Els temps d'inserció mostren resultats mixtos. En datasets petits com \texttt{lorem\_ipsum}, el Naive és més ràpid (0.81 ms vs 1.23 ms del Radix). No obstant això, en datasets grans com \texttt{dna\_genome}, el Radix Tree presenta millores significatives en temps d'inserció (651 ms vs 2558 ms) i cerca (262 ms vs 541 ms), demostrant un millor rendiment asimptòtic. En el cas de \texttt{words\_alpha}, el Radix és més eficient en inserció però lleugerament més lent en cerca, probablement degut al cost de navegació per les etiquetes comprimides.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\textwidth]{figures/plot_histogram_log_Tiempo_Busqueda_ms.png}
+	\caption{Representació en escala logarítmica del temps de cerca en ms per cada dataset i tipus de trie.}
+	\label{fig:radix_example}
+\end{figure}
+
+\subsection{Nodes Visitats i Profunditat}
+El Radix Tree redueix significativament el nombre de nodes necessaris per representar el mateix conjunt de dades. Per exemple, a \texttt{moby\_dick}, el Radix utilitza 45.258 nodes front als 63.712 del Naive (una reducció del 29\%). Aquesta compactació es tradueix en arbres menys profunds i, en general, en menor nombre de nodes visitats durant les cerques.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\textwidth]{figures/plot_histogram_log_Nodos_Visitados.png}
+	\caption{Representació en escala logarítmica dels nodes visitats per cada dataset i tipus de trie}
 	\label{fig:radix_example}
 \end{figure}
 
@@ -194,14 +215,6 @@ Els resultats de la nostra investigació han estat força consistents amb les hi
 
 Aquest projecte ha permès analitzar experimentalment el comportament de dues estructures de dades fonamentals per a l'emmagatzematge eficient de paraules: el Trie Naive i el Radix Tree. Els resultats obtinguts confirmen les hipòtesis teòriques plantejades a l'inici i permeten extreure les següents conclusions principals:
 
-\subsection{Eficiència Espacial}
-El Radix Tree demostra una superioritat clara en termes d'ús de memòria. En datasets com \texttt{moby\_dick}, el Radix Tree ocupa aproximadament 4.96 MB front als 51.86 MB del Naive Trie (una reducció del 90.4\%). Aquesta diferència s'accentua encara més en datasets amb moltes paraules úniques: per \texttt{words\_alpha}, el Radix utilitza 83.61 MB mentre que el Naive requereix 1.08 GB, obtenint una compressió del 92.3\%. En casos extrems com \texttt{dna\_genome}, la millora arriba al 99.3\% (75.35 MB vs 10.36 GB). Aquestes dades confirmen que la compressió de prefixos comuns del Radix Tree és altament efectiva en entorns amb recursos limitats.
-
-\subsection{Eficiència Temporal}
-Els temps d'inserció mostren resultats mixtos. En datasets petits com \texttt{lorem\_ipsum}, el Naive és més ràpid (0.81 ms vs 1.23 ms del Radix). No obstant això, en datasets grans com \texttt{dna\_genome}, el Radix Tree presenta millores significatives en temps d'inserció (651 ms vs 2558 ms) i cerca (262 ms vs 541 ms), demostrant un millor rendiment asimptòtic. En el cas de \texttt{words\_alpha}, el Radix és més eficient en inserció però lleugerament més lent en cerca, probablement degut al cost de navegació per les etiquetes comprimides.
-
-\subsection{Nodes Visitats i Profunditat}
-El Radix Tree redueix significativament el nombre de nodes necessaris per representar el mateix conjunt de dades. Per exemple, a \texttt{moby\_dick}, el Radix utilitza 45.258 nodes front als 63.712 del Naive (una reducció del 29\%). Aquesta compactació es tradueix en arbres menys profunds i, en general, en menor nombre de nodes visitats durant les cerques.
 
 \subsection{Aplicabilitat i Limitacions}
 Els resultats suggereixen que el Radix Tree és especialment adequat per aplicacions on la memòria és un recurs crític i es treballa amb grans volums de text amb prefixos comuns (diccionaris, autocompletat, indexació de genomes). El Naive Trie, tot i ser més simple d'implementar, només és viable per datasets molt petits o quan la simplicitat de codi és prioritària.
