@@ -11,12 +11,46 @@ Un trie és una estructura de dades en forma d'arbre que utilitza l'indexatge de
 L'estructura de dades trie (també coneguda com a arbre de prefixos) és un arbre ordenat utilitzat per representar una sèrie de paraules (strings) sobre un alfabet finit. Permet que els prefixos comuns facin servir els mateixos nodes, i emmagatzema només els caràcters que difereixen. 
 Cada node en una trie està associat a un caràcter de l'alfabet, menys el node arrel que és un node buit, i el nombre màxim de fills que pot tenir un determinat node és igual al nombre de caràcters existents en l'alfabet. Pel propòsit d'aquest treball, es farà servir el diccionari ASCII com a referència, de manera que tots els fills quedaran ordenats alfabeticament seguint aquest estandard. El final d'una paraula quedarà representat per un valor associat al node, on s'indicarà l'index d'aquesta paraula dintre del conjunt del text que es faci servir com a dataset. És important recalcar que, per tal que una paraula aparegui al diccionari constituit per un trie, no cal que sigui un node fulla, ja que es pot fer una indexació de qualsevol node intermig que formi part d'una altra paraula més llarga. 
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.6\textwidth]{figures/trie_example.png}
-	\caption{Exemple d'un trie que conté les paraules ``at'', ``ate'', ``bad'', ``bed'', ``beard'' i ``beat''.}
-	\label{fig:trie_example}
+\usetikzlibrary{arrows.meta, positioning}
+\tikzset{
+  mynode/.style={circle, draw, minimum size=8mm, inner sep=1pt, font=\small},
+  myedge/.style={-Stealth, thick}
+}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  level distance=1.4cm,
+  sibling distance=2.2cm
+]
+\node[mynode]{root}
+  child {node[mynode]{a}
+    child {node[mynode]{t}
+      child {node[mynode]{e}}
+    }
+  }
+  child {node[mynode]{b}
+	child{node[mynode]{a}
+		child{node[mynode]{d}}}
+    child {node[mynode]{e}
+      child {node[mynode]{a}
+	  	child {node[mynode]{r}
+			child {node[mynode]{d}}
+		}
+		child{node[mynode]{t}}
+	  }
+    }
+  };
+\end{tikzpicture}
+\caption{Exemple d'un trie que conté les paraules ``at'', ``ate'', ``bad'', ``bed'', ``beard'' i ``beat''.}
 \end{figure}
+
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[width=0.6\textwidth]{figures/trie_example.png}
+%	\caption{Exemple d'un trie que conté les paraules ``at'', ``ate'', ``bad'', ``bed'', ``beard'' i ``beat''.}
+%	\label{fig:trie_example}
+%\end{figure}
 Tot i que, en general, les tries són estructures eficients per operacions de cerca de paraules o prefixos, aquesta eficiencia normalment significa una penalització en l'ús de memòria. A una implementació bàsica d'un trie, cada node existent tindrà una quantitat de fills igual a la quantitat de caràcters existents en l'alfabet amb el que estem treballant. Això vol dir que en el nostre cas, per exemple, cada node té 128 nodes fills. Notem que a la Figura 1, per simplificació, omitim els fills conformats per nodes buits. 
 Per tant, la complexitat espacial d'un trie d'aquest tipus serà de l'ordre de $ O(NM) $, on $N$ representa el nombre de paraules i $M$ la mida màxima d'una paraula. 
  
@@ -31,12 +65,35 @@ En general, l'ús d'un TST sol ser el mateix que el d'un Trie estandard, però o
 \subsection{Radix Tries}
 Un Radix Tree és una altra variant de trie bàsic que busca estalviar espai en la memòria. L'idea principal d'aquesta estructura és comprimir els nodes que tenen un sol fill per així aconseguir reduir la profunditat de l'arbre i, per tant, el nombre de nodes necessaris per representar un conjunt de paraules.
 El seu funcionament consisteix en que cada aresta de l'arbre pot representar una cadena de caràcters en lloc d'un sol caràcter. Això significa que els nodes es poden fusionar entre si per només haver de tenir un que representa la cadena completa. Per exemple, representant el mateix conjunt de paraules \{``at'', ``ate'', ``bad'', ``bed'', ``beard'', ``beat''\} amb un Radix Tree, tindríem la següent estructura:
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.6\textwidth]{figures/radix_example.png}
-	\caption{Exemple d'un Radix tree que conté les paraules ``at'', ``ate'', ``bad'', ``bed'', ``beard'', ``beat''.}
-	\label{fig:radix_example}
+
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  level distance=1.4cm,
+  sibling distance=2.2cm
+]
+\node[mynode]{root}
+  child {node[mynode]{at}
+    child {node[mynode]{e}}
+  }
+  child {node[mynode]{b}
+	child{node[mynode]{ad}}
+    child{node[mynode]{ea}
+	  	child {node[mynode]{rd}}
+		child{node[mynode]{t}}
+    }
+  };
+\end{tikzpicture}
+\caption{Exemple d'un Radix tree que conté les paraules ``at'', ``ate'', ``bad'', ``bed'', ``beard'' i ``beat''.}
 \end{figure}
+
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[width=0.6\textwidth]{figures/radix_example.png}
+%	\caption{Exemple d'un Radix tree que conté les paraules ``at'', ``ate'', ``bad'', ``bed'', ``beard'', ``beat''.}
+%	\label{fig:radix_example}
+%\end{figure}
 Com veurem més endavant, aquesta estructura millora significativament l'ús de memòria en comparació amb un tree naive i ternari en la majoria de casos (incloent en molt dels textos d'exemples proporcionats), però en cas pitjor tindrà un rendiment similar.
 
 \subsection{Patricia Trees}
@@ -74,8 +131,11 @@ Pel que fa a la cerca de fragments (\texttt{search}), hem corregit la lògica pe
 \section{Avaluació Experimental}
 
 Per tal de fer una experimentació fiable, hem fet servir datasets de diferents característiques. A més, hem implementat diferents modes d'indexació per les paraules dels nostres datasets, de manera que hem analitzat els canvis que succedeixen quan canviem aquest paràmetre. 
-En aquest cas, el primer mode (o mode 0) d'indexació es basa en la indexació per posició de paraula al text. Molt senzillament ha quedat implementat com un contador incremental a mesura que s'indexen totes les paraules del nostre dataset. El segon mode es tracta d'una indexació per línia de text, útil per sets de dades amb característiques concretes. 
-*Aqui poner ejemplo de dataset donde es util* Wikipedia?? 
+En aquest cas, el primer mode (o mode 0) d'indexació es basa en la indexació per posició de paraula al text. Molt senzillament ha quedat implementat com un contador incremental a mesura que s'indexen totes les paraules del nostre dataset. El segon mode es tracta d'una indexació per línia de text, útil per sets de dades amb característiques concretes, com pot ser, per exemple, \texttt{wikipedia\_titles.gz} la llista de noms d'articles de la Wikipedia. En aquest cas, veiem que ens seria poc útil una indexació per posició de paraula, si treballem amb l'objectiu de trobar els articles que continguin el que estem buscant.
+Un exemple del cas contrari, però, seria l'arxiu \texttt{words\_alpha.txt} que conté totes les paraules d'un diccionari en anglès, una per línia. Aqui es fàcil veure que la indexació serà igual en un mode o en l'altre. 
+Un cas particular de les entrades que hem fet servir per fer els nostres experiments és el cas de \texttt{dna\_genome.txt}, un arxiu que conté aproximadamet 12.0 MB d'informació d'un genoma real humà. Aquest dataset difereix de la reta d'examples que hem fet servir en que es una unica string continua, sense espais ni marcadors pel final de paraula. 
+
+Durant la nostra experimentació aquest arxiu ha estat tractat amb els canvis de línia com a separació entre paraules. Una possible implementació per la gestió d'aquest tipus d'arxiu seria la indexació de tots els sufixos existents de la string, guardant així tots els possibles subsets de la cadena. No ha sigut possible realitzar aquest enfoc per temes de recursos, ja que la mida dels arbres era massa gran per les màquines que teniem disponibles i els sistemes que hem fet servir. Tot i això, hem tingut en compte el conjunt de dades per les nostres experimentacions, per poder veure com es comportava respecte a altres entrades. 
 
 Les mètriques que hem decidit utilitzar per realitzar l'experimentació han sigut: memòria total ocupada pels dos tipus de tries un cop fetes totes les insercions, els nodes totals, que seran proporcional a la memòria ocupada, profunditat màxima i mitjana de cada estructura i temps de cerca per unes determinades paraules. 
 Per cada fitxer que hem inserit als arbres lexicogràfics hem generat una sèrie de datasets per tal de realitzar les cerques de paraules aleatòries. Tots els datasets generats consisteixen d'un 30\% de les paraules totals del fitxer, més un 10\% de paraules que no apareixen als textos, per tal de poder estudiar també el comportament de les estructures quan la cerca de paraules resulta fallida. 
