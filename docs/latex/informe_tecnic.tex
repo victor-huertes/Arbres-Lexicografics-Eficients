@@ -143,6 +143,30 @@ Per cada fitxer que hem inserit als arbres lexicogràfics hem generat una sèrie
 \subsection{Resultats}
 Els resultats de la nostra investigació han estat força consistents amb les hipòtesis teòriques que ens haviem suposat. El Radix Tree ha demostrat ser molt superior en termes de memòria, encara que no presenta unes millores significativament altes en temps de cerca ni inserció. 
 
+%%%%%%%%%%%%%%%%%%%
+%\section{Conclusions}
+%En aquesta secció s’han de resumir els principals resultats i aportacions del projecte. Es pot fer una valoració del rendiment assolit, de les dificultats trobades i del coneixement adquirit. També és pertinent incloure possibles extensions, millores o línies futures de treball si el projecte es volgués ampliar. Aquesta secció hauria de tancar el document de forma clara i reflexiva.
+%%%%%%%%%%%%%%%%%%%
+
 \section{Conclusions}
 
-En aquesta secció s’han de resumir els principals resultats i aportacions del projecte. Es pot fer una valoració del rendiment assolit, de les dificultats trobades i del coneixement adquirit. També és pertinent incloure possibles extensions, millores o línies futures de treball si el projecte es volgués ampliar. Aquesta secció hauria de tancar el document de forma clara i reflexiva.
+Aquest projecte ha permès analitzar experimentalment el comportament de dues estructures de dades fonamentals per a l'emmagatzematge eficient de paraules: el Trie Naive i el Radix Tree. Els resultats obtinguts confirmen les hipòtesis teòriques plantejades a l'inici i permeten extreure les següents conclusions principals:
+
+\subsection{Eficiència Espacial}
+El Radix Tree demostra una superioritat clara en termes d'ús de memòria. En datasets com \texttt{moby\_dick}, el Radix Tree ocupa aproximadament 4.96 MB front als 51.86 MB del Naive Trie (una reducció del 90.4\%). Aquesta diferència s'accentua encara més en datasets amb moltes paraules úniques: per \texttt{words\_alpha}, el Radix utilitza 83.61 MB mentre que el Naive requereix 1.08 GB, obtenint una compressió del 92.3\%. En casos extrems com \texttt{dna\_genome}, la millora arriba al 99.3\% (75.35 MB vs 10.36 GB). Aquestes dades confirmen que la compressió de prefixos comuns del Radix Tree és altament efectiva en entorns amb recursos limitats.
+
+\subsection{Eficiència Temporal}
+Els temps d'inserció mostren resultats mixtos. En datasets petits com \texttt{lorem\_ipsum}, el Naive és més ràpid (0.81 ms vs 1.23 ms del Radix). No obstant això, en datasets grans com \texttt{dna\_genome}, el Radix Tree presenta millores significatives en temps d'inserció (651 ms vs 2558 ms) i cerca (262 ms vs 541 ms), demostrant un millor rendiment asimptòtic. En el cas de \texttt{words\_alpha}, el Radix és més eficient en inserció però lleugerament més lent en cerca, probablement degut al cost de navegació per les etiquetes comprimides.
+
+\subsection{Nodes Visitats i Profunditat}
+El Radix Tree redueix significativament el nombre de nodes necessaris per representar el mateix conjunt de dades. Per exemple, a \texttt{moby\_dick}, el Radix utilitza 45.258 nodes front als 63.712 del Naive (una reducció del 29\%). Aquesta compactació es tradueix en arbres menys profunds i, en general, en menor nombre de nodes visitats durant les cerques.
+
+\subsection{Aplicabilitat i Limitacions}
+Els resultats suggereixen que el Radix Tree és especialment adequat per aplicacions on la memòria és un recurs crític i es treballa amb grans volums de text amb prefixos comuns (diccionaris, autocompletat, indexació de genomes). El Naive Trie, tot i ser més simple d'implementar, només és viable per datasets molt petits o quan la simplicitat de codi és prioritària.
+
+Una limitació observada és que en datasets amb molt poca redundància de prefixos (com \texttt{wikipedia\_titles}), l'overhead de gestió dels nodes comprimits pot fer que el Radix sigui menys eficient temporalment (15.26 s vs 8.62 s en inserció), tot i mantenir una millora substancial en memòria (88.6\% de reducció).
+
+\subsection{Línies Futures}
+Com a possibles extensions del projecte, es proposen: (1) la implementació d'un Ternary Search Tree balancejat per avaluar-ne el rendiment amb datasets aleatoris, (2) l'estudi dels Patricia Trees per veure si aporten millores addicionals, (3) l'optimització del Radix Tree per millorar els temps de cerca en datasets amb poques coincidències de prefixos, i (4) l'avaluació d'aquestes estructures en operacions d'autocompletat en temps real amb datasets dinàmics.
+
+En resum, aquest treball ha demostrat empíricament la superioritat del Radix Tree en eficiència espacial i ha quantificat els trade-offs temporals en diferents escenaris, proporcionant una base sòlida per a la selecció de l'estructura adequada segons els requisits de cada aplicació.
