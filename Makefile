@@ -42,8 +42,7 @@ plot:
 	@echo "Generados graficos con gnuplot en /output"
 
 pdf: 
-	@cd docs/latex && pdflatex -interaction=nonstopmode main.tex > /dev/null 2>&1
-	@cd docs/latex && pdflatex -interaction=nonstopmode main.tex > /dev/null 2>&1
+	@cd docs/latex && pdflatex -interaction=nonstopmode main.tex > /dev/null
 	@echo "PDF generado en docs/latex/main.pdf"
 
 clean:
