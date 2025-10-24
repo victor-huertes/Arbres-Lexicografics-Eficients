@@ -9,12 +9,10 @@ sources/
 ├── include/
 │   ├── trie.h          # Trie Polimórfico
 │   ├── naive.h         # Naive Trie
-│   ├── patricia.h      # Patricia Trie
 │   └── radix.h         # Radix Trie
 └── src/
     ├── trie.cpp
     ├── naive.cpp
-    ├── patricia.cpp
     ├── radix.cpp
     └── main.cpp
 ```
@@ -49,7 +47,11 @@ vector<(string, int)> get_words();
 
 ## Compilación
 
-
+Comandos disponibles:
+  make       - Compila todo el proyecto
+  make run   - Compila y ejecuta la interfaz de consola
+  make clean - Limpia archivos
+  make help  - Muestra ayuda para comandos 
 
 ```bash
 make run

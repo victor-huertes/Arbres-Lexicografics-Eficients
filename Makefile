@@ -32,6 +32,7 @@ run:
 	@g++ -std=c++17 -Wall -O2 -o bin/trie_demo bin/naive.o bin/radix.o bin/main.o
 	@./bin/trie_demo
 
+
 test:
 	@mkdir -p bin
 	@g++ -std=c++17 -Wall -O2 -Isources/include -c sources/src/naive.cpp -o bin/naive.o
