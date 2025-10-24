@@ -1,58 +1,58 @@
 # Árboles Lexicográficos Eficientes
 
-Implementación de diferentes estructuras de tries para almacenar y buscar strings eficientemente.
+Implementación y comparación de estructuras de tries eficientes: **Naive Trie** y **Radix Trie**.
+
+## Requisitos
+
+- Compilador C++ con soporte para C++17 o superior
+- GNU Make
+
+## Compilación y Ejecución
+
+### Ejecutar demo interactivo
+```bash
+make run
+```
+
+### Ejecutar experimentos y generar resultados
+```bash
+make test
+```
+
+### Generar archivo CSV con resultados
+```bash
+make csv
+```
+
+### Limpiar archivos compilados
+```bash
+make clean
+```
 
 ## Estructura del Proyecto
 
 ```
 sources/
-├── include/
-│   ├── trie.h          # Trie Polimórfico
+├── include/            # Archivos de cabecera
 │   ├── naive.h         # Naive Trie
 │   └── radix.h         # Radix Trie
-└── src/
-    ├── trie.cpp
-    ├── naive.cpp
-    ├── radix.cpp
-    └── main.cpp
+├── src/                # Implementaciones
+│   ├── naive.cpp
+│   ├── radix.cpp
+│   ├── main.cpp        # Demo interactiva
+│   └── experiments.cpp # Experimentos
+data/                   # Datasets de prueba
+output/                 # Resultados CSV
 ```
 
-## API de las Clases
+## Autores
 
-Todas las implementaciones (Trie, Patricia, Radix) siguen la misma interfaz:
+Equipo 13
 
-```cpp
-// Inicializar el trie con un texto (inserta todos los sufijos del texo)
-// Ejemplo:
-//   texto = "Hola"
-//   (palabra, posicion)[] = [("Hola", 0), ("ola", 1), ("la", 2), ("a", 3)]
-void init(string text);
+Laura Moreno Valencia - laura.christel.moreno@estudiantat.upc.edu
 
-// Insertar una palabra y su posición en el texto
-void insert(string word, int position);
+Víctor Huertes Montes - victor.huertes@estudiantat.upc.edu
 
-// Buscar palabra y devolver posiciones donde aparece
-vector<int> search(string word);
+Abraham Ruiz Vasquez - abraham.ruiz.vasquez@estudiantat.upc.edu
 
-// Encontrar palabras que comienzan con un prefijo
-vector<int> starts_with(string prefix);
-
-// Devuelve todas las palabras que empiecen por un prefijo
-// Es como un starts_with(...) pero busca la palabra en cada texto
-vector<(string, int)> autocomplete(string prefix);
-
-// Obtener todas las palabras del trie
-vector<(string, int)> get_words();
-```
-
-## Compilación
-
-Comandos disponibles:
-  make       - Compila todo el proyecto
-  make run   - Compila y ejecuta la interfaz de consola
-  make clean - Limpia archivos
-  make help  - Muestra ayuda para comandos 
-
-```bash
-make run
-```
+Pol Riveiro Clarà - pol.riveiro@estudiantat.upc.edu

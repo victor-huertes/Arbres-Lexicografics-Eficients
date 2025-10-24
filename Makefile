@@ -20,6 +20,7 @@ zip:
 		InformeEquip13.pdf \
 		output/results.csv \
 		output/results_stats.csv \
+		data/* \
 		-x "*/output/*" "*/plot/*"  "*.o" "bin/*"
 	@echo "Archivo ProjecteEquip13.zip creado correctamente."
 
