@@ -10,6 +10,20 @@ all:
 	@g++ -std=c++17 -Wall -O2 -o bin/experiments bin/naive.o bin/radix.o bin/experiments.o
 	@echo "Compilacion completada"
 
+zip:
+	@echo "Creando archivo de entrega..."
+	@zip -r ProjecteEquip13.zip \
+		Makefile \
+		sources/src \
+		sources/include \
+		README.md \
+		InformeEquip13.pdf \
+		output/results.csv \
+		output/results_stats.csv \
+		-x "*/output/*" "*/plot/*"  "*.o" "bin/*"
+	@echo "Archivo ProjecteEquip13.zip creado correctamente."
+
+
 run:
 	@mkdir -p bin
 	@g++ -std=c++17 -Wall -O2 -Isources/include -c sources/src/naive.cpp -o bin/naive.o

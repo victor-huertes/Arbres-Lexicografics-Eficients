@@ -177,7 +177,7 @@ Un cas particular de les entrades que hem fet servir per fer els nostres experim
 
 Durant la nostra experimentació aquest arxiu ha estat tractat amb els canvis de línia com a separació entre paraules. Una possible implementació per la gestió d'aquest tipus d'arxiu seria la indexació de tots els sufixos existents de la string, guardant així tots els possibles subsets de la cadena. No ha sigut possible realitzar aquest enfoc per temes de recursos, ja que la mida dels arbres era massa gran per les màquines que teníem disponibles i els sistemes que hem fet servir. Tot i això, hem tingut en compte el conjunt de dades per les nostres experimentacions, per poder veure com es comportava respecte a altres entrades. 
 
-L'entorn d'experimentació ha sigut un PC amb processador IntelCore i7, 16GB de RAM i una targeta gràfica NVIDA RTX 3080ti. El sistema operatiu és Linux Arch. 
+L'entorn d'experimentació ha sigut un PC amb processador IntelCore i7, 16GB de RAM i una targeta gràfica NVIDIA RTX 3080ti. El sistema operatiu és Linux Arch. 
 
 Les mètriques que hem decidit utilitzar per realitzar l'experimentació han sigut: memòria total ocupada pels dos tipus de tries un cop fetes totes les insercions, els nodes totals, que seran proporcional a la memòria ocupada, profunditat màxima i mitjana de cada estructura i temps de cerca per unes determinades paraules. 
 Per cada fitxer que hem inserit als arbres lexicogràfics hem generat una sèrie de datasets per tal de realitzar les cerques de paraules aleatòries. Tots els datasets generats consisteixen d'un 30\% de les paraules totals del fitxer, més un 10\% de paraules que no apareixen als textos, per tal de poder estudiar també el comportament de les estructures quan la cerca de paraules resulta fallida. 
