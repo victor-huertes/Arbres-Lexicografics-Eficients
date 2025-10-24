@@ -9,7 +9,7 @@ Un trie és una estructura de dades en forma d'arbre que utilitza l'indexatge de
 \section{Antecedents}
 
 L'estructura de dades trie (també coneguda com a arbre de prefixos) és un arbre ordenat utilitzat per representar una sèrie de paraules (strings) sobre un alfabet finit. Permet que els prefixos comuns facin servir els mateixos nodes, i emmagatzema només els caràcters que difereixen. 
-Cada node en una trie està associat a un caràcter de l'alfabet, menys el node arrel que és un node buit, i el nombre màxim de fills que pot tenir un determinat node és igual al nombre de caràcters existents en l'alfabet. Pel propòsit d'aquest treball, es farà servir el diccionari ASCII com a referència, de manera que tots els fills quedaran ordenats alfabeticament seguint aquest estandard. El final d'una paraula quedarà representat per un valor associat al node, on s'indicarà l'index d'aquesta paraula dintre del conjunt del text que es faci servir com a dataset. És important recalcar que, per tal que una paraula aparegui al diccionari constituit per un trie, no cal que sigui un node fulla, ja que es pot fer una indexació de qualsevol node intermig que formi part d'una altra paraula més llarga. 
+Cada node en una trie està associat a un caràcter de l'alfabet, menys el node arrel que és un node buit, i el nombre màxim de fills que pot tenir un determinat node és igual al nombre de caràcters existents en l'alfabet. Pel propòsit d'aquest treball, es farà servir el diccionari ASCII com a referència, de manera que tots els fills quedaran ordenats alfabèticament seguint aquest estàndard. El final d'una paraula quedarà representat per un valor associat al node, on s'indicarà l'index d'aquesta paraula dintre del conjunt del text que es faci servir com a dataset. És important recalcar que, per tal que una paraula aparegui al diccionari constituït per un trie, no cal que sigui un node fulla, ja que es pot fer una indexació de qualsevol node intermedi que formi part d'una altra paraula més llarga. 
 
 \usetikzlibrary{arrows.meta, positioning}
 \tikzset{
@@ -51,16 +51,16 @@ Cada node en una trie està associat a un caràcter de l'alfabet, menys el node 
 %	\caption{Exemple d'un trie que conté les paraules ``at'', ``ate'', ``bad'', ``bed'', ``beard'' i ``beat''.}
 %	\label{fig:trie_example}
 %\end{figure}
-Tot i que, en general, les tries són estructures eficients per operacions de cerca de paraules o prefixos, aquesta eficiencia normalment significa una penalització en l'ús de memòria. A una implementació bàsica d'un trie, cada node existent tindrà una quantitat de fills igual a la quantitat de caràcters existents en l'alfabet amb el que estem treballant. Això vol dir que en el nostre cas, per exemple, cada node té 128 nodes fills. Notem que a la Figura 1, per simplificació, omitim els fills conformats per nodes buits. 
+Tot i que, en general, les tries són estructures eficients per operacions de cerca de paraules o prefixos, aquesta eficiència normalment significa una penalització en l'ús de memòria. A una implementació bàsica d'un trie, cada node existent tindrà una quantitat de fills igual a la quantitat de caràcters existents en l'alfabet amb el que estem treballant. Això vol dir que en el nostre cas, per exemple, cada node té 128 nodes fills. Notem que a la Figura 1, per simplificació, ometem els fills conformats per nodes buits. 
 Per tant, la complexitat espacial d'un trie d'aquest tipus serà de l'ordre de $ O(NM) $, on $N$ representa el nombre de paraules i $M$ la mida màxima d'una paraula. 
  
 L'eficiència en termes de memòria ha estat el motor pel desenvolupament de diverses variants de les tries tradicionals. En aquest treball discutirem dues de les principals alternatives: els Ternary Search Trees (TST) i els Radix Trees. 
 \subsection{Ternary Search Trees}
 Un Ternary Search Tree (o arbre ternari de cerca) és un tipus de tree que busca aprofitar els avantatges espacials dels Binary Search Trees, reduint el numero de fills possibles per un node qualsevol. 
-El seu funcionament és simple: cada node tindrà 3 possibles fills. El fill esquerre (\textit{left child}), el fill dret (\textit{right child}) i el fill central (\textit{middle child}). El valor del fill esquerre haurà de ser un valor menor al del node pare, el del fill dret haura de ser major, y el fill central serà un punter al valor del següent símbol de la string a qui pertany el node central.
-Notem que el rendiment d'aquesta estructura depen directament de la profunditat de l'arbre.  
+El seu funcionament és simple: cada node tindrà 3 possibles fills. El fill esquerre (\textit{left child}), el fill dret (\textit{right child}) i el fill central (\textit{middle child}). El valor del fill esquerre haurà de ser un valor menor al del node pare, el del fill dret haurà de ser major, y el fill central serà un punter al valor del següent símbol de la string a qui pertany el node central.
+Notem que el rendiment d'aquesta estructura depèn directament de la profunditat de l'arbre.  
 
-En general, l'ús d'un TST sol ser el mateix que el d'un Trie estandard, però obtindrem el pitjor rendiment a un TST treballant amb cadenes ordenades, ja que la millor manera que tindrem de garantir un bon rendiment sera tenint un arbre balancejat. 
+En general, l'ús d'un TST sol ser el mateix que el d'un Trie estàndard, però obtindrem el pitjor rendiment a un TST treballant amb cadenes ordenades, ja que la millor manera que tindrem de garantir un bon rendiment serà tenint un arbre balancejat. 
 
 \begin{figure}[h]
 \centering
@@ -159,7 +159,7 @@ La primera implementació que hem realitzat ha sigut la del Naive Trie. Hem crea
 Cada node del trie està representat per una estructura que conté un vector \textit{children} de punters als seus fills (de mida 128 per cobrir l'alfabet ASCII), un vector \textit{index} que indica totes les posicions on ha aparegut la paraula al text (útil per cert usos) i un indicador \textit{end of word} per saber si el node marca el final de paraula. Hem intentat aplicar els bàsics d'un trie però fent-lo una mica ineficient per representar una implementació naive.
 
 També hem implementat la capacitat de buscar prefixos, utilitzant una funció que retorna totes les paraules en el subtree del node actual. Aquesta funció recursiva recorre tots els fills del node i afegeix les paraules completes a una llista de resultats.
-Aquestes implementacions no tenen com a objetiu ser les més correctes, sinó fer una implementació naive que permeti comparar l'eficiencia temporal i espacial amb el Radix Tree, una estructura més sofisticada. Tot i això, hem fet que la inserció i la búsqueda tinguin cost lineal \textit{O(n)} respecte el tamany \textit{n} de la paraula a buscar/inserir.
+Aquestes implementacions no tenen com a objectiu ser les més correctes, sinó fer una implementació naive que permeti comparar l'eficiència temporal i espacial amb el Radix Tree, una estructura més sofisticada. Tot i això, hem fet que la inserció i la cerca tinguin cost lineal \textit{O(n)} respecte la mida \textit{n} de la paraula a buscar/inserir.
 
 \subsection{Radix Tree}
 El RadixTree és l'estructura més compacta i eficient que hem implementat, dissenyada per maximitzar l'estalvi d'espai al comprimir les arrels comunes dels prefixos en etiquetes de longitud variable. La nostra implementació funciona com un Trie de Sufixos, indexant la totalitat dels sufixos del text d'entrada (com s'executa a la funció \texttt{init(text)}), cosa crucial per permetre la cerca de qualsevol fragment dins de la seqüència. El node intern (\texttt{RadixNode}) emmagatzema una \textit{Label} (la subcadena comprimida que representa un camí lineal), punters als seus fills, i un vector \texttt{index} per a les posicions al text original.
@@ -170,12 +170,12 @@ Pel que fa a la cerca de fragments (\texttt{search}), hem corregit la lògica pe
 
 \section{Avaluació Experimental}
 
-Per tal de fer una experimentació fiable, hem fet servir datasets de diferents característiques. A més, hem implementat diferents modes d'indexació per les paraules dels nostres datasets, de manera que hem analitzat els canvis que succedeixen quan canviem aquest paràmetre. 
-En aquest cas, el primer mode (o mode 0) d'indexació es basa en la indexació per posició de paraula al text. Molt senzillament ha quedat implementat com un contador incremental a mesura que s'indexen totes les paraules del nostre dataset. El segon mode es tracta d'una indexació per línia de text, útil per sets de dades amb característiques concretes, com pot ser, per exemple, \texttt{wikipedia\_titles} la llista de noms d'articles de la Wikipedia. En aquest cas, veiem que ens seria poc útil una indexació per posició de paraula, si treballem amb l'objectiu de trobar els articles que continguin el que estem buscant.
-Un exemple del cas contrari, però, seria l'arxiu \texttt{words\_alpha} que conté totes les paraules d'un diccionari en anglès, una per línia. Aqui es fàcil veure que la indexació serà igual en un mode o en l'altre. 
-Un cas particular de les entrades que hem fet servir per fer els nostres experiments és el cas de \texttt{dna\_genome}, un arxiu que conté aproximadamet 12.0 MB d'informació d'un genoma real humà. Aquest dataset difereix de la reta d'examples que hem fet servir en que es una unica string continua, sense espais ni marcadors pel final de paraula. 
+Per tal de fer una experimentació fiable, hem fet servir datasets de diferents característiques. A més, hem implementat diferents modes d'indexació per les paraules dels nostres datasets, de manera que hem analitzat els canvis que succeeixen quan canviem aquest paràmetre. 
+En aquest cas, el primer mode (o mode 0) d'indexació es basa en la indexació per posició de paraula al text. Molt senzillament ha quedat implementat com un comptador incremental a mesura que s'indexen totes les paraules del nostre dataset. El segon mode es tracta d'una indexació per línia de text, útil per sets de dades amb característiques concretes, com pot ser, per exemple, \texttt{wikipedia\_titles} la llista de noms d'articles de la Wikipedia. En aquest cas, veiem que ens seria poc útil una indexació per posició de paraula, si treballem amb l'objectiu de trobar els articles que continguin el que estem buscant.
+Un exemple del cas contrari, però, seria l'arxiu \texttt{words\_alpha} que conté totes les paraules d'un diccionari en anglès, una per línia. Aquí es fàcil veure que la indexació serà igual en un mode o en l'altre. 
+Un cas particular de les entrades que hem fet servir per fer els nostres experiments és el cas de \texttt{dna\_genome}, un arxiu que conté aproximadament 12.0 MB d'informació d'un genoma real humà. Aquest dataset difereix de la reta d'exemples que hem fet servir en que es una única string continua, sense espais ni marcadors pel final de paraula. 
 
-Durant la nostra experimentació aquest arxiu ha estat tractat amb els canvis de línia com a separació entre paraules. Una possible implementació per la gestió d'aquest tipus d'arxiu seria la indexació de tots els sufixos existents de la string, guardant així tots els possibles subsets de la cadena. No ha sigut possible realitzar aquest enfoc per temes de recursos, ja que la mida dels arbres era massa gran per les màquines que teniem disponibles i els sistemes que hem fet servir. Tot i això, hem tingut en compte el conjunt de dades per les nostres experimentacions, per poder veure com es comportava respecte a altres entrades. 
+Durant la nostra experimentació aquest arxiu ha estat tractat amb els canvis de línia com a separació entre paraules. Una possible implementació per la gestió d'aquest tipus d'arxiu seria la indexació de tots els sufixos existents de la string, guardant així tots els possibles subsets de la cadena. No ha sigut possible realitzar aquest enfoc per temes de recursos, ja que la mida dels arbres era massa gran per les màquines que teníem disponibles i els sistemes que hem fet servir. Tot i això, hem tingut en compte el conjunt de dades per les nostres experimentacions, per poder veure com es comportava respecte a altres entrades. 
 
 L'entorn d'experimentació ha sigut un PC amb processador IntelCore i7, 16GB de RAM i una targeta gràfica NVIDA RTX 3080ti. El sistema operatiu és Linux Arch. 
 
@@ -183,14 +183,14 @@ Les mètriques que hem decidit utilitzar per realitzar l'experimentació han sig
 Per cada fitxer que hem inserit als arbres lexicogràfics hem generat una sèrie de datasets per tal de realitzar les cerques de paraules aleatòries. Tots els datasets generats consisteixen d'un 30\% de les paraules totals del fitxer, més un 10\% de paraules que no apareixen als textos, per tal de poder estudiar també el comportament de les estructures quan la cerca de paraules resulta fallida. 
 
 \subsection{Resultats}
-Els resultats de la nostra investigació han estat força consistents amb les hipòtesis teòriques que ens haviem suposat. El Radix Tree ha demostrat ser molt superior en termes de memòria, encara que no presenta unes millores significativament altes en temps de cerca ni inserció. 
+Els resultats de la nostra investigació han estat força consistents amb les hipòtesis teòriques que ens havíem suposat. El Radix Tree ha demostrat ser molt superior en termes de memòria, encara que no presenta unes millores significativament altes en temps de cerca ni inserció. 
 
 \subsection{Eficiència Espacial}
 El Radix Tree demostra una superioritat clara en termes d'ús de memòria. En datasets com \texttt{moby\_dick}, el Radix Tree ocupa aproximadament 4.96 MB front als 51.86 MB del Naive Trie (una reducció del 90.4\%). Aquesta diferència s'accentua encara més en datasets amb moltes paraules úniques: per \texttt{words\_alpha}, el Radix utilitza 83.61 MB mentre que el Naive requereix 1.08 GB, obtenint una compressió del 92.3\%. En casos extrems com \texttt{dna\_genome}, la millora arriba al 99.3\% (75.35 MB vs 10.36 GB). Aquestes dades confirmen que la compressió de prefixos comuns del Radix Tree és altament efectiva en entorns amb recursos limitats.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\textwidth]{figures/plot_histogram_log_Memoria_KB.png}
-	\caption{Representació en escala logarítmica de l'ús de memoria en KB per cada dataset i tipus de trie}
+	\caption{Representació en escala logarítmica de l'ús de memòria en KB per cada dataset i tipus de trie}
 	\label{fig:radix_example}
 \end{figure}
 
